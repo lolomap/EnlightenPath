@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eeb2b13a1b947909d314e7608ea4490, type: 3}
+  m_Name: TestDungeonConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Data.DungeonConfig
+  Width: 5
+  Height: 5
+  GrandCandle:
+    Rooms:
+      _serializedList:
+      - Key: {fileID: 11400000, guid: 8c73a83bc739b2e4a96c1d00481f6a33, type: 2}
+        Value: 10
+      - Key: {fileID: 11400000, guid: 831651d4309c6c841ac0980932278d03, type: 2}
+        Value: 6
+      - Key: {fileID: 11400000, guid: 6b57ffdf38013294fa8b9ceb3d9d9c98, type: 2}
+        Value: 4
