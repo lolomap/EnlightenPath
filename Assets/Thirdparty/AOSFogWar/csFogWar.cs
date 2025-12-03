@@ -13,9 +13,11 @@ using System;                       // Convert
 using System.IO;                    // Directory
 using System.Linq;                  // Enumerable
 using System.Collections.Generic;
-using DG.Tweening; // List
+using DG.Tweening;
+using Events; // List
 using UnityEngine;                  // Monobehaviour
-using UnityEditor;                  // Handles
+using UnityEditor;
+using Zenject; // Handles
 
 
 
@@ -272,7 +274,7 @@ namespace FischlWorks_FogWar
 
         private const string levelScanDataPath = "/LevelData";
 
-
+        [Inject] private EventBus _eventBus;
 
         // --- --- ---
 
@@ -283,6 +285,8 @@ namespace FischlWorks_FogWar
             CheckProperties();
 
             InitializeVariables();
+
+            _eventBus.FogObstaclesDirty.EventRaised += OnObstaclesDirty;
 
             if (LevelDataToLoad == null)
             {
@@ -308,15 +312,12 @@ namespace FischlWorks_FogWar
 
             // This is needed because we do not update the fog when there's no unit-scale movement of each fogRevealer
             ForceUpdateFog();
-
-            DOTween.Sequence().SetDelay(1.5f).AppendCallback(() =>
-            {
-                Debug.LogWarning("OH SHIT YOU SHOULD REPLACE IT WITH EVENTS ASAP");
-                ScanLevel();
-            }).SetLoops(-1).Play();
         }
 
-
+        private void OnObstaclesDirty()
+        {
+            ScanLevel();
+        }
 
         private void Update()
         {

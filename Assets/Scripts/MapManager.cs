@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Data;
 using EditorAttributes;
+using Events;
 using UnityEngine;
 using Utilities;
 using Zenject;
@@ -13,7 +14,8 @@ public class MapManager : MonoBehaviour
 	
 	private GridMap _grid;
 	private readonly Dictionary<Vector2Int, GameObject> _roomObjects = new();
-	
+
+	[Inject] private EventBus _eventBus;
 	[Inject] private DungeonConfig _config;
 
 	private void Awake()
@@ -64,6 +66,7 @@ public class MapManager : MonoBehaviour
 		_roomObjects[gridPos] = roomObj;
 		roomData.GridPos = gridPos;
 		_grid.Replace(gridPos.x, gridPos.y, roomData);
+		_eventBus.FogObstaclesDirty.RaiseEvent();
 	}
 
 	private void RotateRoom(Vector2Int gridPos, Direction direction)
@@ -84,7 +87,7 @@ public class MapManager : MonoBehaviour
 	[FoldoutGroup("Test Position Convertion", nameof(_testPos), nameof(_testGridPos))]
 	[SerializeField]
 #pragma warning disable CS0414 // Field is assigned but its value is never used
-	private EditorAttributes.Void _testPosConvertion;
+	private Void _testPosConvertion;
 #pragma warning restore CS0414 // Field is assigned but its value is never used
 	
 	[SerializeField, HideProperty] private Vector3 _testPos;

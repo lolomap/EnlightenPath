@@ -28,19 +28,10 @@ namespace FischlWorks_FogWar
 
 
 
-        private void Start()
+        private void Awake()
         {
-            // This part is meant to be modified following the project's scene structure later...
-            try
-            {
-                fogWar = FindObjectOfType<csFogWar>();
-            }
-            catch
-            {
-                Debug.LogErrorFormat("Failed to fetch csFogWar component. " +
-                    "Please rename the gameobject that the module is attachted to as \"FogWar\", " +
-                    "or change the implementation located in the csFogVisibilityAgent.cs script.");
-            }
+            if (fogWar == null)
+                Debug.LogError("Fog reference is missing!");
         }
 
 
