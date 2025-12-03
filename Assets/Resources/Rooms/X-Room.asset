@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: X-Room
   m_EditorClassIdentifier: Assembly-CSharp::Data.RoomSO
   Prefab: {fileID: 0}
+  Preview: {fileID: 21300000, guid: 3cdefc79657860e4faab611dac76ccdf, type: 3}
   Connections: 00000000010000000200000003000000
   Direction: 0
   SpawnedInside: []

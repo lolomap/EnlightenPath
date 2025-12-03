@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: T-Room
   m_EditorClassIdentifier: Assembly-CSharp::Data.RoomSO
   Prefab: {fileID: 2046632829595553608, guid: fe3904e499029c54f954899a7fe904c9, type: 3}
+  Preview: {fileID: 21300000, guid: 6a7524b8337b1c24c9968fc13663d44c, type: 3}
   Connections: 020000000100000003000000
   Direction: 0
   SpawnedInside: []

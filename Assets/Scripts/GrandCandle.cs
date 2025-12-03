@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using Data;
+using EditorAttributes;
+using UI;
 
 [Serializable]
 public class GrandCandleConfig
@@ -28,8 +30,16 @@ public class GrandCandle
 		}
 	}
 
-	public List<RoomSO> Pop(int count)
+	public List<RoomSO> Pop(int count, bool remove)
 	{
-		return _rooms.GetRange(_rooms.Count - count, count);
+		if (count > _rooms.Count) count = _rooms.Count;
+		if (count <= 0) return new();
+		
+		List<RoomSO> result = _rooms.GetRange(_rooms.Count - count, count);
+		
+		if (remove)
+			_rooms.RemoveRange(_rooms.Count - count, count);
+				
+		return result;
 	}
 }

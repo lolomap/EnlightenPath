@@ -277,10 +277,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.LayoutElement
   m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
+  m_MinWidth: 0
+  m_MinHeight: 0
+  m_PreferredWidth: 0
+  m_PreferredHeight: 0
   m_FlexibleWidth: 3
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
@@ -400,10 +400,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.LayoutElement
   m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
+  m_MinWidth: 0
+  m_MinHeight: 0
+  m_PreferredWidth: 0
+  m_PreferredHeight: 0
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
@@ -556,6 +556,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7076fc5576e4702a2423fc5f377ca42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.GrandCandleVisual
+  TilesTarget: {fileID: 978642337}
 --- !u!4 &187780090
 Transform:
   m_ObjectHideFlags: 0
@@ -565,7 +566,7 @@ Transform:
   m_GameObject: {fileID: 187780085}
   serializedVersion: 2
   m_LocalRotation: {x: -0.08715578, y: 0, z: 0, w: 0.9961947}
-  m_LocalPosition: {x: -0.64128, y: -1.93, z: 0.86718}
+  m_LocalPosition: {x: 1.89, y: -1.93, z: 0.86718}
   m_LocalScale: {x: 2, y: 4, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1322,6 +1323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05c1723851864508bd4e90eb03a4c01a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DI.DungeonInstaller
+  EventBus: {fileID: 11400000, guid: 9fd89ac121b76fc45b36758e2741b287, type: 2}
   DungeonConfig: {fileID: 11400000, guid: 66c89a8b044a64140b7252d9236cfb6c, type: 2}
 --- !u!4 &535076245
 Transform:
@@ -1985,8 +1987,10 @@ GameObject:
   m_Component:
   - component: {fileID: 978642332}
   - component: {fileID: 978642335}
+  - component: {fileID: 978642337}
   - component: {fileID: 978642334}
   - component: {fileID: 978642333}
+  - component: {fileID: 978642336}
   m_Layer: 5
   m_Name: Tiles
   m_TagString: Untagged
@@ -2026,10 +2030,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.LayoutElement
   m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
+  m_MinWidth: 0
+  m_MinHeight: 0
+  m_PreferredWidth: 0
+  m_PreferredHeight: 0
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
   m_LayoutPriority: 1
@@ -2046,7 +2050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.2627451}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2071,6 +2075,45 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 978642331}
   m_CullTransparentMesh: 1
+--- !u!114 &978642336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978642331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.HorizontalLayoutGroup
+  m_Padding:
+    m_Left: 0
+    m_Right: 32
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 5
+  m_Spacing: 42
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
+--- !u!114 &978642337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978642331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 803ac3a597e543658b7b6f6925d7300a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.TilesSelector
+  TilePrefab: {fileID: 6684801037671975160, guid: 161c31e1ef522de4f9c932ff0f1511b3, type: 3}
 --- !u!1 &1047714101
 GameObject:
   m_ObjectHideFlags: 0
@@ -2122,10 +2165,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.LayoutElement
   m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
+  m_MinWidth: 0
+  m_MinHeight: 0
+  m_PreferredWidth: 0
+  m_PreferredHeight: 0
   m_FlexibleWidth: -1
   m_FlexibleHeight: 3
   m_LayoutPriority: 1
@@ -2806,8 +2849,8 @@ SceneRoots:
   - {fileID: 504605341}
   - {fileID: 611229181}
   - {fileID: 1700963207}
-  - {fileID: 535076245}
-  - {fileID: 1980701726}
   - {fileID: 1715015963}
   - {fileID: 187780090}
   - {fileID: 837629391}
+  - {fileID: 535076245}
+  - {fileID: 1980701726}

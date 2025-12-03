@@ -8,6 +8,7 @@ namespace Data
 	public class RoomSO : ScriptableObject
 	{
 		public GameObject Prefab;
+		public Sprite Preview;
 		public List<Direction> Connections;
 		public Direction Direction;
 		public List<SpawnObjectSO> SpawnedInside;
