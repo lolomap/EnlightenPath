@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using Data;
-using EditorAttributes;
-using UI;
+using UnityEngine;
 
 [Serializable]
 public class GrandCandleConfig
@@ -25,7 +24,7 @@ public class GrandCandle
 		{
 			for (int i = 0; i < count; i++)
 			{
-				_rooms.Add(room);
+				_rooms.Add(UnityEngine.Object.Instantiate(room));
 			}
 		}
 	}

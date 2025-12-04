@@ -278,15 +278,21 @@ namespace FischlWorks_FogWar
 
         // --- --- ---
 
+        private void OnEnable()
+        {
+            _eventBus.FogObstaclesDirty.EventRaised += OnObstaclesDirty;
+        }
 
+        private void OnDisable()
+        {
+            _eventBus.FogObstaclesDirty.EventRaised -= OnObstaclesDirty;
+        }
 
         private void Start()
         {
             CheckProperties();
 
             InitializeVariables();
-
-            _eventBus.FogObstaclesDirty.EventRaised += OnObstaclesDirty;
 
             if (LevelDataToLoad == null)
             {

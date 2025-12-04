@@ -9,5 +9,8 @@ namespace Events
         public readonly GenericEventChannel FogObstaclesDirty = new();
         public readonly GenericEventChannel<LightChangedPayload> LightChanged = new();
         public readonly GenericEventChannel<bool> TogglePlayerMovement = new();
+        public readonly GenericEventChannel<Vector3> PreviewMoved = new();
+        public readonly GenericEventChannel<Vector3> PreviewRotated = new();
+        public readonly GenericEventChannel<Vector3> SubmitPlacing = new();
     }
 }

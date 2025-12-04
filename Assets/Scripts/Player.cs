@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Utilities;
 
-public class Player : MonoBehaviour, Controls.IPlayerActions
+public class Player : MonoBehaviour
 {
 	public float Speed;
 	public float StopDistance;

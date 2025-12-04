@@ -13,13 +13,21 @@ namespace UI
         public float ShakeDuration;
         public float ShakeStrength;
         public float HoverScale;
-        [FormerlySerializedAs("HoverTime")]
         public float HoverScaleTime;
         public RoomSO Content { get; private set; }
 
+        private TilesSelector _container;
+        private bool _isHighlighted;
+
         private void Awake()
         {
+            _container = transform.parent.GetComponent<TilesSelector>();
             Preview.rectTransform.DOShakeAnchorPos(ShakeDuration, ShakeStrength).SetLoops(-1);
+        }
+
+        private void OnDestroy()
+        {
+            Preview.rectTransform.DOKill();
         }
 
         public void Init(RoomSO room)
@@ -28,9 +36,15 @@ namespace UI
             Preview.sprite = room.Preview;
         }
 
+        public void SetHighlighted(bool isHighlighted)
+        {
+            _isHighlighted = isHighlighted;
+            
+        }
+
         public void OnPointerClick(PointerEventData eventData)
         {
-            
+            _container.Select(this);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
