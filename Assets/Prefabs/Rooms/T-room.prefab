@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 803127429577158285}
+  - component: {fileID: -3859386528984610834}
   m_Layer: 0
   m_Name: T-room
   m_TagString: Untagged
@@ -46,6 +47,18 @@ Transform:
   - {fileID: 543785971684993888}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-3859386528984610834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046632829595553608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dce63c6069e4ab1ab9943443688458f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Room
 --- !u!1 &4736799893139307721
 GameObject:
   m_ObjectHideFlags: 0

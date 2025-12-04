@@ -48,6 +48,11 @@ namespace FischlWorks_FogWar
                 levelRow.Add(levelColumn);
             }
 
+            public void Reset()
+            {
+                levelRow.Clear();
+            }
+
             // Indexer definition
             public LevelColumn this[int index] {
                 get {
@@ -323,6 +328,8 @@ namespace FischlWorks_FogWar
         private void OnObstaclesDirty()
         {
             ScanLevel();
+            ForceUpdateFog();
+            Debug.LogFormat("Dirty fog is solved");
         }
 
         private void Update()
@@ -538,6 +545,8 @@ namespace FischlWorks_FogWar
             levelData.unitScale = unitScale;
             levelData.scanSpacingPerUnit = scanSpacingPerUnit;
 
+            levelData.Reset(); // Fix deleted scan
+            
             for (int xIterator = 0; xIterator < levelDimensionX; xIterator++)
             {
                 // Adding a new list for column (y axis) for each unit in row (x axis)

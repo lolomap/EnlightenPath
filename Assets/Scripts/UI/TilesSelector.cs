@@ -34,7 +34,7 @@ namespace UI
             if (selected == null) return;
 
             selected.SetHighlighted(true);
-            Preview.Preview(selected.Content.Prefab);
+            Preview.Preview(selected.Content.Prefab.gameObject);
         }
 
         public void Remove(Tile removed)

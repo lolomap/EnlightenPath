@@ -1,7 +1,8 @@
-﻿using System;
-using Events;
+﻿using Events;
+using FischlWorks_FogWar;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Utilities;
 using Zenject;
 
 public class PreviewManager : MonoBehaviour
@@ -14,6 +15,7 @@ public class PreviewManager : MonoBehaviour
     public LayerMask PlaneLayer;
     
     private GameObject _previewObject;
+    private int _previewFogRevealer;
     private bool _isBlocked;
 
     [Inject] private EventBus _eventBus;
@@ -41,41 +43,16 @@ public class PreviewManager : MonoBehaviour
     public void SetBlocked(bool isBlocked)
     {
         _isBlocked = isBlocked;
-        SetTint(isBlocked ? PreviewBlockTint : PreviewTint);
+        GameObjectManipulator.SetTint(_previewObject, isBlocked ? PreviewBlockTint : PreviewTint);
     }
 
     private void SetupPreview(GameObject prefab)
     {
         _previewObject = Instantiate(prefab, transform);
         
-        SetTint(PreviewTint);
-        DisableCollision();
+        GameObjectManipulator.SetTint(_previewObject, PreviewTint);
+        GameObjectManipulator.ToggleCollision(_previewObject, false);
         UpdatePosition();
-    }
-
-    private void SetTint(Color color)
-    {
-        if (_previewObject == null) return;
-        
-        MeshRenderer[] meshes = _previewObject.GetComponentsInChildren<MeshRenderer>();
-        foreach (MeshRenderer previewMesh in meshes)
-        {
-            previewMesh.material = new(previewMesh.material)
-            {
-                color = color
-            };
-        }
-    }
-    
-    private void DisableCollision()
-    {
-        if (_previewObject == null) return;
-        
-        Collider[] colliders = _previewObject.GetComponentsInChildren<Collider>();
-        foreach (Collider previewCollider in colliders)
-        {
-            previewCollider.enabled = false;
-        }
     }
 
     private void UpdatePosition()

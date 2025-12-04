@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a1ffef085524c2fbe736d2de7aeee91, type: 3}
   m_Name: Corridor
   m_EditorClassIdentifier: Assembly-CSharp::Data.RoomSO
-  Prefab: {fileID: 2046632829595553608, guid: 915d29703012b3b4781e857db59c7b87, type: 3}
+  Prefab: {fileID: 8480501971132690287, guid: 915d29703012b3b4781e857db59c7b87, type: 3}
   Preview: {fileID: 21300000, guid: 6fc6037ea6dc54445ad3ad8a8fe81abd, type: 3}
   Connections: 0100000003000000
   Direction: 0

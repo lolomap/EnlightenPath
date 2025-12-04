@@ -454,12 +454,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 187780090}
-  - component: {fileID: 187780089}
   - component: {fileID: 187780088}
   - component: {fileID: 187780087}
   - component: {fileID: 187780086}
   m_Layer: 6
-  m_Name: GrandCandle
+  m_Name: GrandCandleMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -544,19 +543,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 187780085}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &187780089
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 187780085}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7076fc5576e4702a2423fc5f377ca42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI.GrandCandleVisual
-  TilesTarget: {fileID: 978642337}
 --- !u!4 &187780090
 Transform:
   m_ObjectHideFlags: 0
@@ -565,14 +551,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 187780085}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.08715578, y: 0, z: 0, w: 0.9961947}
-  m_LocalPosition: {x: 1.89, y: -1.93, z: 0.86718}
-  m_LocalScale: {x: 2, y: 4, z: 2}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 2, y: 1, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1991274412}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -10, y: 0, z: 0}
+  m_Father: {fileID: 2093649053}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &192308850
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,7 +703,7 @@ MonoBehaviour:
     m_ActionName: 'Player/Click[/Mouse/leftButton]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: d2170c28-d110-4fde-9c7a-dcbe91c87752
+  m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 330585545}
 --- !u!1 &257893154
@@ -1280,6 +1266,7 @@ MonoBehaviour:
   MapCenter: {x: 0, y: 10, z: 0}
   CellSize: {x: 10, y: 10}
   StartRoom: {fileID: 11400000, guid: 831651d4309c6c841ac0980932278d03, type: 2}
+  NoRoomPrefab: {fileID: -1646332442189922222, guid: ef7d4f3df59c942428a41adc8e2eafb3, type: 3}
   Preview: {fileID: 1899584570}
   Tiles: {fileID: 978642337}
   _testPos: {x: 0, y: 0, z: 0}
@@ -1842,7 +1829,7 @@ MonoBehaviour:
   levelDimensionX: 128
   levelDimensionY: 128
   unitScale: 0.5
-  scanSpacingPerUnit: 0.25
+  scanSpacingPerUnit: 0.1
   rayStartHeight: 5
   rayMaxDistance: 100
   obstacleLayers:
@@ -3001,6 +2988,53 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!1 &2093649052
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2093649053}
+  - component: {fileID: 2093649054}
+  m_Layer: 0
+  m_Name: GrandCandle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2093649053
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2093649052}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.08715578, y: 0, z: 0, w: 0.9961947}
+  m_LocalPosition: {x: 2, y: -6, z: 1}
+  m_LocalScale: {x: 1, y: 4, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 187780090}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: -10, y: 0, z: 0}
+--- !u!114 &2093649054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2093649052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7076fc5576e4702a2423fc5f377ca42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.GrandCandleVisual
+  TilesTarget: {fileID: 978642337}
+  MeltDuration: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -3012,7 +3046,7 @@ SceneRoots:
   - {fileID: 611229181}
   - {fileID: 1700963207}
   - {fileID: 1715015963}
-  - {fileID: 187780090}
+  - {fileID: 2093649053}
   - {fileID: 1899584571}
   - {fileID: 837629391}
   - {fileID: 535076245}

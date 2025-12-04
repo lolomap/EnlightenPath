@@ -15,6 +15,8 @@ public class GrandCandle
 	private GrandCandleConfig _config;
 	private readonly List<RoomSO> _rooms;
 
+	public int Fuel => _rooms.Count;
+
 	public GrandCandle(GrandCandleConfig config)
 	{
 		_config = config;

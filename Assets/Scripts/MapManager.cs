@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Data;
+using DI;
 using EditorAttributes;
 using Events;
 using UI;
@@ -13,11 +14,13 @@ public class MapManager : MonoBehaviour
 	public Vector3 MapCenter;
 	public Vector2 CellSize;
 	public RoomSO StartRoom;
+	public Room NoRoomPrefab;
 	public PreviewManager Preview;
 	public TilesSelector Tiles;
 	
 	private GridMap _grid;
-	private readonly Dictionary<Vector2Int, GameObject> _roomObjects = new();
+	private Room _cachedRoomObject;
+	private readonly Dictionary<Vector2Int, Room> _roomObjects = new();
 
 	[Inject] private EventBus _eventBus;
 	[Inject] private DungeonConfig _config;
@@ -25,8 +28,12 @@ public class MapManager : MonoBehaviour
 	private void Awake()
 	{
 		_grid = new(_config.Width, _config.Height);
-		
 		Init();
+	}
+
+	private void Start()
+	{
+		//_eventBus.FogObstaclesDirty.RaiseEvent();
 	}
 
 	private void OnEnable()
@@ -77,23 +84,64 @@ public class MapManager : MonoBehaviour
 
 	private void Init()
 	{
-		PlaceRoom(StartRoom, WorldToGrid(MapCenter));
+		for (int x = 0; x < _grid.Width; x++)
+		{
+			for (int y = 0; y < _grid.Height; y++)
+			{
+				//if (x == _grid.Width / 2 && y == _grid.Height / 2) continue; 
+				EraseRoom(new(x, y), false);
+			}
+		}
+
+		PlaceRoom(StartRoom, WorldToGrid(MapCenter), false);
 	}
 	
-	private void PlaceRoom(RoomSO roomConfig, Vector2Int gridPos)
+	private void PlaceRoom(RoomSO roomConfig, Vector2Int gridPos, bool updateFog = true)
 	{
 		Vector3 centeredPos = GridToWorld(gridPos, true);
 		RoomSO roomData = Instantiate(roomConfig);
 
-		GameObject roomObj = Instantiate(roomData.Prefab, centeredPos, Quaternion.identity, transform);
-		roomObj.transform.Rotate(0, 90 * (int)roomConfig.Direction, 0);
+		if (_roomObjects.ContainsKey(gridPos))
+		{
+			Destroy(_roomObjects[gridPos].gameObject);
+			_roomObjects.Remove(gridPos);
+		}
+
+		Room roomObj = DIGlobal.Instantiate(
+			roomData.Prefab.gameObject, centeredPos, Quaternion.Euler(0, 90 * (int)roomConfig.Direction, 0), transform
+			).GetComponent<Room>();
 		
 		_roomObjects[gridPos] = roomObj;
 		roomData.GridPos = gridPos;
 		
 		_grid.Replace(gridPos.x, gridPos.y, roomData);
 		
-		_eventBus.FogObstaclesDirty.RaiseEvent();
+		if (updateFog)
+			_eventBus.FogObstaclesDirty.RaiseEvent();
+	}
+
+	private void EraseRoom(Vector2Int gridPos, bool updateFog = true)
+	{
+		Vector3 centeredPos = GridToWorld(gridPos, true);
+
+		Room roomObj;
+		if (_roomObjects.ContainsKey(gridPos))
+		{
+			roomObj = _roomObjects[gridPos];
+            		
+            Destroy(roomObj.gameObject);
+            _roomObjects.Remove(gridPos);
+            _grid.Replace(gridPos.x, gridPos.y, null);
+		}
+		
+		if (NoRoomPrefab != null)
+		{
+			roomObj = DIGlobal.Instantiate(NoRoomPrefab.gameObject, centeredPos, Quaternion.identity, transform).GetComponent<Room>();
+			_roomObjects[gridPos] = roomObj;
+
+			if (updateFog)
+				_eventBus.FogObstaclesDirty.RaiseEvent();
+		}
 	}
 	
 	private void RotateRoom(Vector2Int gridPos, Direction direction)
@@ -101,7 +149,7 @@ public class MapManager : MonoBehaviour
 		RoomSO room = _grid.Get(gridPos.x, gridPos.y);
 		RotateRoom(room, direction);
 		
-		if (_roomObjects.TryGetValue(gridPos, out GameObject roomObj))
+		if (_roomObjects.TryGetValue(gridPos, out Room roomObj))
 			roomObj.transform.rotation = Quaternion.Euler(0, 90 * (int)direction, 0);
 	}
 
@@ -122,6 +170,12 @@ public class MapManager : MonoBehaviour
 		Vector2Int gridPos = WorldToGrid(pos);
 		bool isValid = _grid.IsValidPlace(gridPos.x, gridPos.y, Tiles.Selected.Content.Connections);
 		Preview.SetBlocked(!isValid);
+
+		/*if (_cachedRoomObject != null)
+			GameObjectManipulator.ToggleCollision(_cachedRoomObject.gameObject, true);
+		if (_roomObjects.TryGetValue(gridPos, out _cachedRoomObject))
+			GameObjectManipulator.ToggleCollision(_cachedRoomObject.gameObject, false);
+		_eventBus.FogObstaclesDirty.RaiseEvent();*/
 	}
 
 	private void OnPreviewRotated(Vector3 pos)
