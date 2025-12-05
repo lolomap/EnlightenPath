@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Data;
+using Events;
 using UnityEngine;
+using Zenject;
 namespace UI
 {
     public class TilesSelector : MonoBehaviour
@@ -11,6 +13,8 @@ namespace UI
         private readonly List<Tile> _tiles = new();
 
         public Tile Selected { get; private set; }
+
+        [Inject] private EventBus _eventBus;
 
         public void AddTiles(List<RoomSO> rooms)
         {
@@ -34,13 +38,16 @@ namespace UI
             if (selected == null) return;
 
             selected.SetHighlighted(true);
-            Preview.Preview(selected.Content.Prefab.gameObject);
+            Preview.Preview(selected.Content.Prefab.gameObject, Quaternion.Euler(0, 90 * (int)Selected.Content.Direction, 0));
         }
 
         public void Remove(Tile removed)
         {
             _tiles.Remove(removed);
             Destroy(removed.gameObject);
+
+            if (_tiles.Count == 0)
+                _eventBus.ToggleMovementUI.RaiseEvent(true);
         }
     }
 }

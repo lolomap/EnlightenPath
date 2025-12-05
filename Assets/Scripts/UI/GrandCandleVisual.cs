@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Data;
 using DG.Tweening;
 using EditorAttributes;
+using Events;
 using UnityEngine;
 using Zenject;
 
@@ -17,6 +19,7 @@ namespace UI
 		private float _maxHeightElements;
 
 		[Inject] private DungeonConfig _config;
+		[Inject] private EventBus _eventBus;
 		
 		private void Awake()
 		{
@@ -25,13 +28,28 @@ namespace UI
 			_maxHeightElements = _candle.Fuel;
 		}
 
+		private void OnEnable()
+		{
+			_eventBus.RequestTiles.EventRaised += OnRequestTiles;
+			_eventBus.RequestTiles.EventRaised += OnDestroyTiles;
+		}
+
+		private void OnDisable()
+		{
+			_eventBus.RequestTiles.EventRaised -= OnRequestTiles;
+			_eventBus.RequestTiles.EventRaised -= OnDestroyTiles;
+		}
+
 		private void UpdateHeight()
 		{
 			transform.DOScaleY(_candle.Fuel * _maxHeightScale / _maxHeightElements, MeltDuration);
 		}
 
+		private void OnRequestTiles(int count) => Get(count);
+		private void OnDestroyTiles(int count) => Get(count, true);
+
 		[Button]
-		public void Get(int count, bool destroy = false)
+		private void Get(int count, bool destroy = false)
 		{
 			List<RoomSO> rooms = _candle.Pop(count, true);
 			UpdateHeight();

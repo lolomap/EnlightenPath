@@ -288,6 +288,11 @@ namespace FischlWorks_FogWar
             _eventBus.FogObstaclesDirty.EventRaised += OnObstaclesDirty;
         }
 
+        private void OnDestroy()
+        {
+            _eventBus.FogObstaclesDirty.EventRaised -= OnObstaclesDirty;
+        }
+
         private void OnDisable()
         {
             _eventBus.FogObstaclesDirty.EventRaised -= OnObstaclesDirty;
@@ -323,6 +328,8 @@ namespace FischlWorks_FogWar
 
             // This is needed because we do not update the fog when there's no unit-scale movement of each fogRevealer
             ForceUpdateFog();
+            
+            _eventBus.FogIsReady.RaiseEvent();
         }
 
         private void OnObstaclesDirty()

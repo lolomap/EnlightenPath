@@ -1,5 +1,4 @@
 ﻿using Events;
-using FischlWorks_FogWar;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Utilities;
@@ -13,6 +12,7 @@ public class PreviewManager : MonoBehaviour
     public float PreviewHeight;
     public Vector2 CellSizeSnapping;
     public LayerMask PlaneLayer;
+    public int RenderLayer;
     
     private GameObject _previewObject;
     private int _previewFogRevealer;
@@ -26,12 +26,12 @@ public class PreviewManager : MonoBehaviour
             UpdatePosition();
     }
 
-    public void Preview(GameObject prefab)
+    public void Preview(GameObject prefab, Quaternion rotation)
     {
         if (_previewObject != null)
             DropPreview();
         
-        SetupPreview(prefab);
+        SetupPreview(prefab, rotation);
     }
 
     public void DropPreview()
@@ -46,10 +46,11 @@ public class PreviewManager : MonoBehaviour
         GameObjectManipulator.SetTint(_previewObject, isBlocked ? PreviewBlockTint : PreviewTint);
     }
 
-    private void SetupPreview(GameObject prefab)
+    private void SetupPreview(GameObject prefab, Quaternion rotation)
     {
-        _previewObject = Instantiate(prefab, transform);
-        
+        _previewObject = Instantiate(prefab, Vector3.zero, rotation, transform);
+
+        _previewObject.layer = RenderLayer;
         GameObjectManipulator.SetTint(_previewObject, PreviewTint);
         GameObjectManipulator.ToggleCollision(_previewObject, false);
         UpdatePosition();

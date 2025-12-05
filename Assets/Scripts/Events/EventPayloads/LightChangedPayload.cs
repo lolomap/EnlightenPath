@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Events.EventPayloads
 {
     public struct LightChangedPayload
     {
-        public List<Vector2Int> Darked;
-        public List<Vector2Int> Lighted;
+        public Vector3 Last;
+        public Vector3 Present;
+        public int Intensity;
     }
 }

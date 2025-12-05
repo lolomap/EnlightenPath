@@ -3,6 +3,7 @@ using Data;
 using DI;
 using EditorAttributes;
 using Events;
+using Events.EventPayloads;
 using UI;
 using UnityEngine;
 using Utilities;
@@ -21,6 +22,8 @@ public class MapManager : MonoBehaviour
 	private GridMap _grid;
 	private Room _cachedRoomObject;
 	private readonly Dictionary<Vector2Int, Room> _roomObjects = new();
+	private readonly Dictionary<Vector2Int, int> _lightedRooms = new();
+	private readonly List<Vector2Int> _waitingForLightRooms = new();
 
 	[Inject] private EventBus _eventBus;
 	[Inject] private DungeonConfig _config;
@@ -31,16 +34,12 @@ public class MapManager : MonoBehaviour
 		Init();
 	}
 
-	private void Start()
-	{
-		//_eventBus.FogObstaclesDirty.RaiseEvent();
-	}
-
 	private void OnEnable()
 	{
 		_eventBus.PreviewMoved.EventRaised += OnPreviewMove;
 		_eventBus.PreviewRotated.EventRaised += OnPreviewRotated;
 		_eventBus.SubmitPlacing.EventRaised += OnSubmitPlacing;
+		_eventBus.LightChanged.EventRaised += OnLightChanged;
 	}
 	
 	private void OnDisable()
@@ -48,6 +47,7 @@ public class MapManager : MonoBehaviour
 		_eventBus.PreviewMoved.EventRaised -= OnPreviewMove;
 		_eventBus.PreviewRotated.EventRaised -= OnPreviewRotated;
 		_eventBus.SubmitPlacing.EventRaised -= OnSubmitPlacing;
+		_eventBus.LightChanged.EventRaised -= OnLightChanged;
 	}
 
 	public RoomSO GetRoomInPos(Vector2Int position) => _grid.Get(position.x, position.y);
@@ -88,7 +88,6 @@ public class MapManager : MonoBehaviour
 		{
 			for (int y = 0; y < _grid.Height; y++)
 			{
-				//if (x == _grid.Width / 2 && y == _grid.Height / 2) continue; 
 				EraseRoom(new(x, y), false);
 			}
 		}
@@ -168,14 +167,14 @@ public class MapManager : MonoBehaviour
 	private void OnPreviewMove(Vector3 pos)
 	{
 		Vector2Int gridPos = WorldToGrid(pos);
-		bool isValid = _grid.IsValidPlace(gridPos.x, gridPos.y, Tiles.Selected.Content.Connections);
+		bool isValid = _waitingForLightRooms.Contains(gridPos) && _grid.IsValidPlace(gridPos.x, gridPos.y, Tiles.Selected.Content.Connections);
 		Preview.SetBlocked(!isValid);
 
-		/*if (_cachedRoomObject != null)
+		if (_cachedRoomObject != null)
 			GameObjectManipulator.ToggleCollision(_cachedRoomObject.gameObject, true);
 		if (_roomObjects.TryGetValue(gridPos, out _cachedRoomObject))
 			GameObjectManipulator.ToggleCollision(_cachedRoomObject.gameObject, false);
-		_eventBus.FogObstaclesDirty.RaiseEvent();*/
+		_eventBus.FogObstaclesDirty.RaiseEvent();
 	}
 
 	private void OnPreviewRotated(Vector3 pos)
@@ -190,6 +189,71 @@ public class MapManager : MonoBehaviour
 	{
 		PlaceRoom(Tiles.Selected.Content, WorldToGrid(pos));
 		Tiles.Remove(Tiles.Selected);
+	}
+
+	private void OnLightChanged(LightChangedPayload context)
+	{
+		Vector2Int lastGridPos = WorldToGrid(context.Last);
+		Vector2Int presentGridPos = WorldToGrid(context.Present);
+
+		_waitingForLightRooms.Clear();
+        
+		int tilesNeeded = -2;
+		for (int x = -context.Intensity; x <= context.Intensity; x++)
+		{
+			Vector2Int gridPos = new(presentGridPos.x + x, presentGridPos.y);
+			if (_lightedRooms.TryAdd(gridPos, 1))
+			{
+				tilesNeeded++;
+				_waitingForLightRooms.Add(gridPos);
+			}
+			else
+				_lightedRooms[gridPos]++;
+		}
+		for (int y = -context.Intensity; y <= context.Intensity; y++)
+		{
+			Vector2Int gridPos = new(presentGridPos.x, presentGridPos.y + y);
+			if (_lightedRooms.TryAdd(gridPos, 1))
+			{
+				tilesNeeded++;
+				_waitingForLightRooms.Add(gridPos);
+			}
+			else
+				_lightedRooms[gridPos]++;
+		}
+		
+		for (int x = -context.Intensity; x < context.Intensity; x++)
+		{
+			Vector2Int gridPos = new(lastGridPos.x + x, lastGridPos.y);
+			if (!_lightedRooms.ContainsKey(gridPos))
+			{
+				_lightedRooms[gridPos]--;
+				if (_lightedRooms[gridPos] <= 0)
+				{
+					_lightedRooms.Remove(gridPos);
+					EraseRoom(gridPos, false);
+				}
+			}
+		}
+		for (int y = -context.Intensity; y < context.Intensity; y++)
+		{
+			Vector2Int gridPos = new(lastGridPos.x, lastGridPos.y + y);
+			if (!_lightedRooms.ContainsKey(gridPos))
+			{
+				_lightedRooms[gridPos]--;
+				if (_lightedRooms[gridPos] <= 0)
+				{
+					_lightedRooms.Remove(gridPos);
+					EraseRoom(gridPos, false);
+				}
+			}
+		}
+		
+		_eventBus.FogObstaclesDirty.RaiseEvent();
+		
+		if (tilesNeeded != 0)
+			_eventBus.RequestTiles.RaiseEvent(tilesNeeded);
+		else _eventBus.ToggleMovementUI.RaiseEvent(true);
 	}
 	
 #if UNITY_EDITOR

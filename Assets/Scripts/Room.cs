@@ -8,7 +8,7 @@ public class Room : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (_eventBus != null)
+        if (gameObject.scene.isLoaded && _eventBus != null)
             _eventBus.FogObstaclesDirty.RaiseEvent();
     }
 }
