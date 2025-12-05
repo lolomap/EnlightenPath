@@ -1,4 +1,5 @@
-﻿using Events;
+﻿using EditorAttributes;
+using Events;
 using UnityEngine;
 using Zenject;
 
@@ -14,6 +15,7 @@ public class LightSource : MonoBehaviour
         _lastPosition = transform.position;
     }
 
+    [Button]
     public void UpdateLight()
     {
         _eventBus.LightChanged.RaiseEvent(new() {Last = _lastPosition, Present = transform.position, Intensity = Intensity});

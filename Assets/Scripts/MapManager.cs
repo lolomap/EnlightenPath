@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Data;
 using DI;
 using EditorAttributes;
@@ -18,6 +20,7 @@ public class MapManager : MonoBehaviour
 	public Room NoRoomPrefab;
 	public PreviewManager Preview;
 	public TilesSelector Tiles;
+	public Player Player;
 	
 	private GridMap _grid;
 	private Room _cachedRoomObject;
@@ -167,7 +170,9 @@ public class MapManager : MonoBehaviour
 	private void OnPreviewMove(Vector3 pos)
 	{
 		Vector2Int gridPos = WorldToGrid(pos);
-		bool isValid = _waitingForLightRooms.Contains(gridPos) && _grid.IsValidPlace(gridPos.x, gridPos.y, Tiles.Selected.Content.Connections);
+
+		bool isValid = _waitingForLightRooms.Contains(gridPos) &&
+			_grid.IsValidPlace(gridPos, Tiles.Selected.Content.Connections, Player.CurrentGridPos);
 		Preview.SetBlocked(!isValid);
 
 		if (_cachedRoomObject != null)
@@ -197,63 +202,67 @@ public class MapManager : MonoBehaviour
 		Vector2Int presentGridPos = WorldToGrid(context.Present);
 
 		_waitingForLightRooms.Clear();
-        
-		int tilesNeeded = -2;
-		for (int x = -context.Intensity; x <= context.Intensity; x++)
+
+		LightCast(lastGridPos, context.Intensity, (gridPos) =>
 		{
-			Vector2Int gridPos = new(presentGridPos.x + x, presentGridPos.y);
-			if (_lightedRooms.TryAdd(gridPos, 1))
-			{
-				tilesNeeded++;
-				_waitingForLightRooms.Add(gridPos);
-			}
-			else
-				_lightedRooms[gridPos]++;
-		}
-		for (int y = -context.Intensity; y <= context.Intensity; y++)
-		{
-			Vector2Int gridPos = new(presentGridPos.x, presentGridPos.y + y);
-			if (_lightedRooms.TryAdd(gridPos, 1))
-			{
-				tilesNeeded++;
-				_waitingForLightRooms.Add(gridPos);
-			}
-			else
-				_lightedRooms[gridPos]++;
-		}
+			if (_lightedRooms.ContainsKey(gridPos)) _lightedRooms[gridPos]--;
+		});
 		
-		for (int x = -context.Intensity; x < context.Intensity; x++)
+		LightCast(presentGridPos, context.Intensity, (gridPos) =>
 		{
-			Vector2Int gridPos = new(lastGridPos.x + x, lastGridPos.y);
-			if (!_lightedRooms.ContainsKey(gridPos))
+			if (_lightedRooms.TryAdd(gridPos, 1))
 			{
-				_lightedRooms[gridPos]--;
-				if (_lightedRooms[gridPos] <= 0)
-				{
-					_lightedRooms.Remove(gridPos);
-					EraseRoom(gridPos, false);
-				}
+				if (gridPos != presentGridPos)
+					_waitingForLightRooms.Add(gridPos);
 			}
+			else _lightedRooms[gridPos]++;
+		});
+
+		List<Vector2Int> toRemove = new();
+		foreach ((Vector2Int gridPos, int count) in _lightedRooms)
+		{
+			if (count > 0) continue;
+			
+			toRemove.Add(gridPos);
+			EraseRoom(gridPos, false);
 		}
-		for (int y = -context.Intensity; y < context.Intensity; y++)
+		foreach (Vector2Int gridPos in toRemove)
 		{
-			Vector2Int gridPos = new(lastGridPos.x, lastGridPos.y + y);
-			if (!_lightedRooms.ContainsKey(gridPos))
-			{
-				_lightedRooms[gridPos]--;
-				if (_lightedRooms[gridPos] <= 0)
-				{
-					_lightedRooms.Remove(gridPos);
-					EraseRoom(gridPos, false);
-				}
-			}
+			_lightedRooms.Remove(gridPos);
 		}
 		
 		_eventBus.FogObstaclesDirty.RaiseEvent();
 		
-		if (tilesNeeded != 0)
-			_eventBus.RequestTiles.RaiseEvent(tilesNeeded);
+		if (_waitingForLightRooms.Count > 0)
+			_eventBus.RequestTiles.RaiseEvent(_waitingForLightRooms.Count);
 		else _eventBus.ToggleMovementUI.RaiseEvent(true);
+	}
+
+	private void LightCast(Vector2Int lightPos, int intensity, Action<Vector2Int> callback)
+	{
+		callback(lightPos);
+
+		bool downBlocked = false, leftBlocked = false, upBlocked = false, rightBlocked = false;
+		for (int i = 1; i <= intensity; i++)
+		{
+			if (!GetRoomInPos(lightPos + Vector2Int.down * (i - 1)).Connections.Contains(Direction.Down))
+				downBlocked = true;
+			if (!GetRoomInPos(lightPos + Vector2Int.left * (i - 1)).Connections.Contains(Direction.Left))
+				leftBlocked = true;
+			if (!GetRoomInPos(lightPos + Vector2Int.right * (i - 1)).Connections.Contains(Direction.Right))
+				rightBlocked = true;
+			if (!GetRoomInPos(lightPos + Vector2Int.up * (i - 1)).Connections.Contains(Direction.Up))
+				upBlocked = true;
+			
+			if (!downBlocked)
+				callback(lightPos + Vector2Int.down * i);
+			if (!leftBlocked)
+				callback(lightPos + Vector2Int.left * i);
+			if (!upBlocked)
+				callback(lightPos + Vector2Int.up * i);
+			if (!rightBlocked)
+				callback(lightPos + Vector2Int.right * i);
+		}
 	}
 	
 #if UNITY_EDITOR

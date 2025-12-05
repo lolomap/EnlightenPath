@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
 	private CharacterController _controller;
 	private MoveUI _moveUI;
 	private LightSource _selfLight;
+	
+	public Vector2Int CurrentGridPos { get; private set; }
 
 	[Inject] private EventBus _eventBus;
 	
@@ -32,6 +34,7 @@ public class Player : MonoBehaviour
 	
 	private void Start()
 	{
+		CurrentGridPos = Map.WorldToGrid(transform.position);
 		_moveUI.Connections = Map.GetRoomInPos(Map.WorldToGrid(transform.position)).Connections;
 	}
 
@@ -103,8 +106,8 @@ public class Player : MonoBehaviour
 		if (distance <= StopDistance)
 		{
 			_isMoving = false;
-
-			_moveUI.Connections = Map.GetRoomInPos(Map.WorldToGrid(transform.position)).Connections;
+			CurrentGridPos = Map.WorldToGrid(transform.position);
+			_moveUI.Connections = Map.GetRoomInPos(CurrentGridPos).Connections;
 			
 			_selfLight.UpdateLight();
 			foreach (LightSource lightSource in ExtraLight)
