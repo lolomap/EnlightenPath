@@ -1,0 +1,15 @@
+{
+  "foldouts": {
+    "47602_Player (Player)_RequestMove_Direction": true,
+    "47602_Player (Player)_TeleportToGridPos_Int32_Int32": true
+  },
+  "parameterValues": {
+    "47602_Player (Player)_RequestMove_Direction": [
+      null
+    ],
+    "47602_Player (Player)_TeleportToGridPos_Int32_Int32": [
+      4,
+      2
+    ]
+  }
+}

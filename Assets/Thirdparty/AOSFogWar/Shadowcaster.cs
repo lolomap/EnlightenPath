@@ -420,10 +420,11 @@ namespace FischlWorks_FogWar
         {
             Vector2Int levelCoordinates = quadrantIterator.QuadrantToLevel(quadrantPoint);
 
-            if (fogWar.CheckLevelGridRange(levelCoordinates) == false)
+            /*if (fogWar.CheckLevelGridRange(levelCoordinates) == false)
             {
                 return;
-            }
+            }*/
+            levelCoordinates = Wrap(levelCoordinates);
 
             if (quadrantPoint.magnitude > sightRange)
             {
@@ -437,24 +438,38 @@ namespace FischlWorks_FogWar
 
         private void RevealTile(Vector2Int levelCoordinates)
         {
-            if (fogWar.CheckLevelGridRange(levelCoordinates) == false)
+            /*if (fogWar.CheckLevelGridRange(levelCoordinates) == false)
             {
                 return;
-            }
+            }*/
+            levelCoordinates = Wrap(levelCoordinates);
 
             fogField[levelCoordinates.x][levelCoordinates.y] = LevelColumn.ETileVisibility.Revealed;
         }
 
+        private Vector2Int Wrap(Vector2Int p)
+        {
+            int W = fogWar.levelData.levelDimensionX;
+            int H = fogWar.levelData.levelDimensionY;
 
+            if (p.x < 0) p.x += W * ((-p.x / W) + 1);
+            if (p.y < 0) p.y += H * ((-p.y / H) + 1);
+
+            p.x %= W;
+            p.y %= H;
+
+            return p;
+        }
 
         private bool IsTileEmpty(Vector2Int quadrantPoint)
         {
             Vector2Int levelCoordinates = quadrantIterator.QuadrantToLevel(quadrantPoint);
 
-            if (fogWar.CheckLevelGridRange(levelCoordinates) == false)
+            /*if (fogWar.CheckLevelGridRange(levelCoordinates) == false)
             {
                 return true;
-            }
+            }*/
+            levelCoordinates = Wrap(levelCoordinates);
 
             return (fogWar.levelData[levelCoordinates.x][levelCoordinates.y] == csFogWar.LevelColumn.ETileState.Empty);
         }
@@ -465,10 +480,11 @@ namespace FischlWorks_FogWar
         {
             Vector2Int levelCoordinates = quadrantIterator.QuadrantToLevel(quadrantPoint);
 
-            if (fogWar.CheckLevelGridRange(levelCoordinates) == false)
+            /*if (fogWar.CheckLevelGridRange(levelCoordinates) == false)
             {
                 return false;
-            }
+            }*/
+            levelCoordinates = Wrap(levelCoordinates);
 
             return (fogWar.levelData[levelCoordinates.x][levelCoordinates.y] == csFogWar.LevelColumn.ETileState.Obstacle);
         }

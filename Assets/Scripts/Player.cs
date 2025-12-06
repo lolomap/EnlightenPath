@@ -101,9 +101,9 @@ public class Player : MonoBehaviour
 	{
 		if (!_isMoving) return;
 		
-		float distance = (_targetPos - transform.position).magnitude;
+		float distanceToTarget = (_targetPos - transform.position).magnitude;
 			
-		if (distance <= StopDistance)
+		if (distanceToTarget <= StopDistance)
 		{
 			_isMoving = false;
 			CurrentGridPos = Map.WorldToGrid(transform.position);
@@ -117,7 +117,35 @@ public class Player : MonoBehaviour
 			
 			return;
 		}
+		
+		float halfWidth = Map.Width / 2f;
+		float halfHeight = Map.Height / 2f;
+		bool teleported = false;
+		Vector3 teleportedPos = transform.position;
+		if (transform.position.x > Map.MapCenter.x + halfWidth) { teleported = true; teleportedPos.x = Map.MapCenter.x - halfWidth; }
+		if (transform.position.x < Map.MapCenter.x - halfWidth) { teleported = true; teleportedPos.x = Map.MapCenter.x + halfWidth; }
+		if (transform.position.z > Map.MapCenter.z + halfHeight) { teleported = true; teleportedPos.z = Map.MapCenter.z - halfHeight; }
+		if (transform.position.z < Map.MapCenter.z - halfHeight) { teleported = true; teleportedPos.z = Map.MapCenter.z + halfHeight; }
 
-		_controller.Move(_direction * (distance <= Speed ? StopDistance * Time.deltaTime : Speed * Time.deltaTime));
+		if (teleported)
+		{
+			_controller.enabled = false;
+
+			Vector3 deltaToTarget = _targetPos - transform.position;
+			transform.position = teleportedPos + _direction * (Speed * Time.deltaTime);
+			_targetPos = transform.position + deltaToTarget;
+			
+			_controller.enabled = true;
+		}
+		else
+			_controller.Move(_direction * (distanceToTarget <= Speed ? StopDistance * Time.deltaTime : Speed * Time.deltaTime));
 	}
+
+	private void TeleportToGridPos(Vector2Int pos)
+	{
+		_controller.enabled = false;
+		transform.position = Map.GridToWorld(pos);
+		_controller.enabled = true;
+	}
+	[Button] public void TeleportToGridPos(int x, int y) => TeleportToGridPos(new(x, y));
 }

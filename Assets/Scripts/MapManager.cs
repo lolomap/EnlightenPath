@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Data;
 using DI;
 using EditorAttributes;
@@ -12,6 +11,7 @@ using Utilities;
 using Zenject;
 using Void = EditorAttributes.Void;
 
+//TODO: Inject
 public class MapManager : MonoBehaviour
 {
 	public Vector3 MapCenter;
@@ -28,6 +28,9 @@ public class MapManager : MonoBehaviour
 	private readonly Dictionary<Vector2Int, int> _lightedRooms = new();
 	private readonly List<Vector2Int> _waitingForLightRooms = new();
 
+	public float Width => _grid.Width * CellSize.x;
+	public float Height => _grid.Height * CellSize.y;
+	
 	[Inject] private EventBus _eventBus;
 	[Inject] private DungeonConfig _config;
 
@@ -97,9 +100,23 @@ public class MapManager : MonoBehaviour
 
 		PlaceRoom(StartRoom, WorldToGrid(MapCenter), false);
 	}
+
+	private void CreateBorders()
+	{
+		for (int x = -1; x <= _grid.Width; x++)
+			DIGlobal.Instantiate(NoRoomPrefab.gameObject, GridToWorld(new(x, -1)), Quaternion.identity, transform);
+		for (int x = -1; x <= _grid.Width; x++)
+			DIGlobal.Instantiate(NoRoomPrefab.gameObject, GridToWorld(new(x, _grid.Height)), Quaternion.identity, transform);
+		for (int y = -1; y <= _grid.Height; y++)
+			DIGlobal.Instantiate(NoRoomPrefab.gameObject, GridToWorld(new(-1, y)), Quaternion.identity, transform);
+		for (int y = -1; y <= _grid.Height; y++)
+			DIGlobal.Instantiate(NoRoomPrefab.gameObject, GridToWorld(new(_grid.Width, y)), Quaternion.identity, transform);
+	}
 	
 	private void PlaceRoom(RoomSO roomConfig, Vector2Int gridPos, bool updateFog = true)
 	{
+		gridPos = _grid.LoopPosition(gridPos);
+		
 		Vector3 centeredPos = GridToWorld(gridPos, true);
 		RoomSO roomData = Instantiate(roomConfig);
 
@@ -169,7 +186,7 @@ public class MapManager : MonoBehaviour
 
 	private void OnPreviewMove(Vector3 pos)
 	{
-		Vector2Int gridPos = WorldToGrid(pos);
+		Vector2Int gridPos = WorldToGrid(pos, true);
 
 		bool isValid = _waitingForLightRooms.Contains(gridPos) &&
 			_grid.IsValidPlace(gridPos, Tiles.Selected.Content.Connections, Player.CurrentGridPos);
@@ -240,7 +257,7 @@ public class MapManager : MonoBehaviour
 
 	private void LightCast(Vector2Int lightPos, int intensity, Action<Vector2Int> callback)
 	{
-		callback(lightPos);
+		callback(_grid.LoopPosition(lightPos));
 
 		bool downBlocked = false, leftBlocked = false, upBlocked = false, rightBlocked = false;
 		for (int i = 1; i <= intensity; i++)
@@ -255,13 +272,13 @@ public class MapManager : MonoBehaviour
 				upBlocked = true;
 			
 			if (!downBlocked)
-				callback(lightPos + Vector2Int.down * i);
+				callback(_grid.LoopPosition(lightPos + Vector2Int.down * i));
 			if (!leftBlocked)
-				callback(lightPos + Vector2Int.left * i);
+				callback(_grid.LoopPosition(lightPos + Vector2Int.left * i));
 			if (!upBlocked)
-				callback(lightPos + Vector2Int.up * i);
+				callback(_grid.LoopPosition(lightPos + Vector2Int.up * i));
 			if (!rightBlocked)
-				callback(lightPos + Vector2Int.right * i);
+				callback(_grid.LoopPosition(lightPos + Vector2Int.right * i));
 		}
 	}
 	
@@ -284,7 +301,7 @@ public class MapManager : MonoBehaviour
 	{
 		_testPos = GridToWorld(_testGridPos);
 	}
-	[Button]
+	
 	public void TestRotateRoom(int x, int y, Direction direction)
 	{
 		RotateRoom(new Vector2Int(x, y), direction);
@@ -292,6 +309,22 @@ public class MapManager : MonoBehaviour
 		{
 			Debug.Log($"New connections in ({x}, {y}): {connection}");
 		}
+	}
+	
+	[FoldoutGroup("Test Placing", nameof(_testPlacePos), nameof(_testPlaceRoom))]
+	[SerializeField]
+#pragma warning disable CS0414 // Field is assigned but its value is never used
+	private Void _testPlacing;
+#pragma warning restore CS0414 // Field is assigned but its value is never used
+
+	[SerializeField, HideProperty] private Vector2Int _testPlacePos;
+	[SerializeField, HideProperty] private RoomSO _testPlaceRoom;
+	[SerializeField, HideProperty] private bool _testPlaceUpdateFog;
+	
+	[Button]
+	public void TestPlaceRoom()
+	{
+		PlaceRoom(_testPlaceRoom, _testPlacePos, _testPlaceUpdateFog);
 	}
 #endif
 }

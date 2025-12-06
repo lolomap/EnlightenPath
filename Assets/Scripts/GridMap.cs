@@ -80,6 +80,8 @@ public class GridMap
 	}
 	private (int, int) LoopPosition(int x, int y)
 	{
+		if (x < Width && x >= 0 && y < Height && y >= 0) return (x, y);
+        
 		x %= Width;
 		y %= Height;
 		if (x < 0)

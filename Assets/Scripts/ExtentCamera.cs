@@ -14,6 +14,7 @@ public class ExtentCamera : MonoBehaviour
 
     public Orientation CameraOrientation;
     public MapManager Map;
+    public LayerMask PlaneLayer;
 
     private Camera _mainCamera;
     private Transform _pivot;
@@ -21,9 +22,7 @@ public class ExtentCamera : MonoBehaviour
     
     private Mesh _debugMesh;
 
-    [Inject] private DungeonConfig _config;
-
-    private void Awake()
+    private void Start()
     {
         _mainCamera = Camera.main;
         if (_mainCamera == null)
@@ -33,11 +32,15 @@ public class ExtentCamera : MonoBehaviour
         }
         
         _pivot = _mainCamera.transform.parent;
-        _mapSize = new(_config.Width * Map.CellSize.x, _config.Height * Map.CellSize.y);
+        _mapSize = new(Map.Width, Map.Height);
     }
 
     private void LateUpdate()
     {
+        Ray ray = _mainCamera.ScreenPointToRay(new(Screen.width / 2, Screen.height / 2));
+        if (!Physics.Raycast(ray, out RaycastHit hit, 1000f, PlaneLayer)) return;
+        Vector3 mainCameraProjection = hit.point;
+        
         Vector3 offset = _mapSize;
 
         switch (CameraOrientation)
@@ -52,8 +55,8 @@ public class ExtentCamera : MonoBehaviour
                 break;
         }
 
-        if (_mainCamera.transform.position.x > Map.MapCenter.x) offset.x *= -1;
-        if (_mainCamera.transform.position.y > Map.MapCenter.y) offset.y *= -1;
+        if (mainCameraProjection.x > Map.MapCenter.x) offset.x *= -1;
+        if (mainCameraProjection.z > Map.MapCenter.z) offset.y *= -1;
 
         Vector3 localOffset = _pivot.InverseTransformVector(offset);
         localOffset.z = transform.localPosition.z;

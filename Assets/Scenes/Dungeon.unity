@@ -833,7 +833,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 264
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1223,17 +1223,17 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras:
-  - {fileID: 209325927}
   - {fileID: 1722486134}
   - {fileID: 1493604584}
   - {fileID: 1494134062}
+  - {fileID: 209325927}
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
+  m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -1419,6 +1419,9 @@ MonoBehaviour:
   Player: {fileID: 192308856}
   _testPos: {x: 0, y: 0, z: 0}
   _testGridPos: {x: 0, y: 0}
+  _testPlacePos: {x: 0, y: 0}
+  _testPlaceRoom: {fileID: 0}
+  _testPlaceUpdateFog: 0
 --- !u!4 &504605341
 Transform:
   m_ObjectHideFlags: 0
@@ -1702,7 +1705,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: d58e702a52e4ad548bb5521854b55d8c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1992,10 +1995,10 @@ MonoBehaviour:
   LevelDataToLoad: {fileID: 0}
   saveDataOnScan: 0
   levelNameToSave: Default
-  levelDimensionX: 128
-  levelDimensionY: 128
+  levelDimensionX: 100
+  levelDimensionY: 100
   unitScale: 0.5
-  scanSpacingPerUnit: 0.1
+  scanSpacingPerUnit: 0.05
   rayStartHeight: 5
   rayMaxDistance: 100
   obstacleLayers:
@@ -2381,7 +2384,7 @@ GameObject:
   - component: {fileID: 1108187469}
   - component: {fileID: 1108187472}
   - component: {fileID: 1108187471}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2548,7 +2551,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
+  m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -2634,6 +2637,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExtentCamera
   CameraOrientation: 0
   Map: {fileID: 504605340}
+  PlaneLayer:
+    serializedVersion: 2
+    m_Bits: 16
 --- !u!1 &1494134061
 GameObject:
   m_ObjectHideFlags: 0
@@ -2727,7 +2733,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
+  m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -2762,6 +2768,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExtentCamera
   CameraOrientation: 2
   Map: {fileID: 504605340}
+  PlaneLayer:
+    serializedVersion: 2
+    m_Bits: 16
 --- !u!4 &1494134065
 Transform:
   m_ObjectHideFlags: 0
@@ -2917,7 +2926,7 @@ Canvas:
   m_GameObject: {fileID: 1700963203}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 330585545}
   m_PlaneDistance: -10
   m_PixelPerfect: 0
@@ -3136,7 +3145,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
+  m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -3222,6 +3231,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExtentCamera
   CameraOrientation: 1
   Map: {fileID: 504605340}
+  PlaneLayer:
+    serializedVersion: 2
+    m_Bits: 16
 --- !u!1 &1899584569
 GameObject:
   m_ObjectHideFlags: 0
