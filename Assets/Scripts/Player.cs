@@ -33,18 +33,21 @@ public class Player : MonoBehaviour
 	
 	private void Start()
 	{
-		_mapManager.SetConnectingSource(_mapManager.WorldToGrid(transform.position));
+		_currentGridPos = _mapManager.WorldToGrid(transform.position);
+		_mapManager.SetConnectingSource(_currentGridPos);
 		_moveUI.Connections = _mapManager.GetRoomInPos(_mapManager.WorldToGrid(transform.position)).Connections;
 	}
 
 	private void OnEnable()
 	{
 		_eventBus.FogIsReady.EventRaised += _selfLight.UpdateLight;
+		_eventBus.ForceMove.EventRaised += MoveToGridPos;
 	}
 
 	private void OnDisable()
 	{
 		_eventBus.FogIsReady.EventRaised -= _selfLight.UpdateLight;
+		_eventBus.ForceMove.EventRaised -= MoveToGridPos;
 	}
 
 	private void Update()
@@ -106,6 +109,7 @@ public class Player : MonoBehaviour
 		{
 			_isMoving = false;
 			_currentGridPos = _mapManager.WorldToGrid(transform.position);
+			_mapManager.SetConnectingSource(_currentGridPos);
 			_moveUI.Connections = _mapManager.GetRoomInPos(_currentGridPos).Connections;
 			
 			_selfLight.UpdateLight();

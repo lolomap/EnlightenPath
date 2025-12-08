@@ -32,6 +32,7 @@ public class MapManager : MonoBehaviour
 	[Inject] private DungeonConfig _config;
 	[Inject] private TilesSelector _tilesSelector;
 	[Inject] private PreviewManager _previewManager;
+	[Inject] private GrandCandle _grandCandle;
 
 	private void Awake()
 	{
@@ -45,6 +46,7 @@ public class MapManager : MonoBehaviour
 		_eventBus.PreviewRotated.EventRaised += OnPreviewRotated;
 		_eventBus.SubmitPlacing.EventRaised += OnSubmitPlacing;
 		_eventBus.LightChanged.EventRaised += OnLightChanged;
+		_eventBus.MovedToDark.EventRaised += OnMovedToDark;
 	}
 	
 	private void OnDisable()
@@ -53,6 +55,7 @@ public class MapManager : MonoBehaviour
 		_eventBus.PreviewRotated.EventRaised -= OnPreviewRotated;
 		_eventBus.SubmitPlacing.EventRaised -= OnSubmitPlacing;
 		_eventBus.LightChanged.EventRaised -= OnLightChanged;
+		_eventBus.MovedToDark.EventRaised -= OnMovedToDark;
 	}
 
 	public void SetConnectingSource(Vector2Int sourceGridPos) => _connectingSourceGridPos = sourceGridPos;
@@ -267,8 +270,22 @@ public class MapManager : MonoBehaviour
 		_eventBus.FogObstaclesDirty.RaiseEvent();
 		
 		if (_waitingForLightRooms.Count > 0)
-			_eventBus.RequestTiles.RaiseEvent(_waitingForLightRooms.Count);
+			_grandCandle.Pick(_waitingForLightRooms.Count);
 		else _eventBus.ToggleMovementUI.RaiseEvent(true);
+	}
+
+	private void OnMovedToDark(Vector2Int gridPos)
+	{
+		RoomSO nextRoom = _grandCandle.Pick(1, true)[0];
+
+		while (
+			!_grid.IsValidPlace(gridPos, nextRoom.Connections, _connectingSourceGridPos) && nextRoom.Direction != Direction.Count
+			)
+			RotateRoom(nextRoom, (Direction)((int)nextRoom.Direction + 1));
+		
+		PlaceRoom(nextRoom, gridPos);
+		
+		_eventBus.ForceMove.RaiseEvent(gridPos);
 	}
 	
 	#region INSPECTOR_TEST

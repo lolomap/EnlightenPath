@@ -9,6 +9,7 @@ namespace DI
 		public MapManager MapManager;
 		public TilesSelector TilesSelector;
 		public PreviewManager PreviewManager;
+		public GrandCandle GrandCandle;
 
 		public override void InstallBindings()
 		{
@@ -18,6 +19,7 @@ namespace DI
 			Container.Bind<MapManager>().FromInstance(MapManager).AsSingle();
 			Container.Bind<TilesSelector>().FromInstance(TilesSelector).AsSingle();
 			Container.Bind<PreviewManager>().FromInstance(PreviewManager).AsSingle();
+			Container.Bind<GrandCandle>().FromInstance(GrandCandle).AsSingle();
 		}
 	}
 }

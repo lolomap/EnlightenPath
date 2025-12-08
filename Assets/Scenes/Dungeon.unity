@@ -715,7 +715,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 986a47da506e448981617dfe244059be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightSource
-  Intensity: 1
+  Intensity: 0
 --- !u!1 &209325923
 GameObject:
   m_ObjectHideFlags: 0
@@ -1468,6 +1468,7 @@ MonoBehaviour:
   MapManager: {fileID: 504605340}
   TilesSelector: {fileID: 978642337}
   PreviewManager: {fileID: 1899584570}
+  GrandCandle: {fileID: 2093649055}
 --- !u!4 &535076245
 Transform:
   m_ObjectHideFlags: 0
@@ -3600,6 +3601,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2093649053}
+  - component: {fileID: 2093649055}
   - component: {fileID: 2093649054}
   m_Layer: 0
   m_Name: GrandCandle
@@ -3636,7 +3638,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7076fc5576e4702a2423fc5f377ca42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.GrandCandleVisual
+  MaxElements: 0
   MeltDuration: 1
+--- !u!114 &2093649055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2093649052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d554cc0ca894c37b6e53b3a02520acf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GrandCandle
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
