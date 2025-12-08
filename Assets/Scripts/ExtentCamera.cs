@@ -1,4 +1,3 @@
-using Data;
 using UnityEngine;
 using Zenject;
 
@@ -13,14 +12,13 @@ public class ExtentCamera : MonoBehaviour
     }
 
     public Orientation CameraOrientation;
-    public MapManager Map;
     public LayerMask PlaneLayer;
 
     private Camera _mainCamera;
     private Transform _pivot;
     private Vector3 _mapSize;
     
-    private Mesh _debugMesh;
+    [Inject] private MapManager _mapManager;
 
     private void Start()
     {
@@ -32,7 +30,7 @@ public class ExtentCamera : MonoBehaviour
         }
         
         _pivot = _mainCamera.transform.parent;
-        _mapSize = new(Map.Width, Map.Height);
+        _mapSize = new(_mapManager.Width, _mapManager.Height);
     }
 
     private void LateUpdate()
@@ -55,8 +53,8 @@ public class ExtentCamera : MonoBehaviour
                 break;
         }
 
-        if (mainCameraProjection.x > Map.MapCenter.x) offset.x *= -1;
-        if (mainCameraProjection.z > Map.MapCenter.z) offset.y *= -1;
+        if (mainCameraProjection.x > _mapManager.MapCenter.x) offset.x *= -1;
+        if (mainCameraProjection.z > _mapManager.MapCenter.z) offset.y *= -1;
 
         Vector3 localOffset = _pivot.InverseTransformVector(offset);
         localOffset.z = transform.localPosition.z;

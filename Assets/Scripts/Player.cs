@@ -11,19 +11,18 @@ public class Player : MonoBehaviour
 {
 	public float Speed;
 	public float StopDistance;
-	public MapManager Map;
 	public List<LightSource> ExtraLight;
 
 	private bool _isMoving;
 	private Vector3 _direction;
 	private Vector3 _targetPos;
+	private Vector2Int _currentGridPos;
 	private CharacterController _controller;
 	private MoveUI _moveUI;
 	private LightSource _selfLight;
-	
-	public Vector2Int CurrentGridPos { get; private set; }
 
 	[Inject] private EventBus _eventBus;
+	[Inject] private MapManager _mapManager;
 	
 	private void Awake()
 	{
@@ -34,8 +33,8 @@ public class Player : MonoBehaviour
 	
 	private void Start()
 	{
-		CurrentGridPos = Map.WorldToGrid(transform.position);
-		_moveUI.Connections = Map.GetRoomInPos(Map.WorldToGrid(transform.position)).Connections;
+		_mapManager.SetConnectingSource(_mapManager.WorldToGrid(transform.position));
+		_moveUI.Connections = _mapManager.GetRoomInPos(_mapManager.WorldToGrid(transform.position)).Connections;
 	}
 
 	private void OnEnable()
@@ -60,7 +59,7 @@ public class Player : MonoBehaviour
 		
 		_moveUI.Toggle(false);
 		
-		Vector2Int gridPos = Map.WorldToGrid(transform.position);
+		Vector2Int gridPos = _mapManager.WorldToGrid(transform.position);
 
 		switch (direction)
 		{
@@ -80,7 +79,7 @@ public class Player : MonoBehaviour
 				throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
 		}
 
-		if (Map.GetRoomInPos(gridPos) != null)
+		if (_mapManager.GetRoomInPos(gridPos) != null)
 		{
 			MoveToGridPos(gridPos);
 			return;
@@ -92,7 +91,7 @@ public class Player : MonoBehaviour
 
 	private void MoveToGridPos(Vector2Int gridPos)
 	{
-		_targetPos = Map.GridToWorld(gridPos);
+		_targetPos = _mapManager.GridToWorld(gridPos);
 		_direction = _targetPos - transform.position;
 		_isMoving = true;
 	}
@@ -106,8 +105,8 @@ public class Player : MonoBehaviour
 		if (distanceToTarget <= StopDistance)
 		{
 			_isMoving = false;
-			CurrentGridPos = Map.WorldToGrid(transform.position);
-			_moveUI.Connections = Map.GetRoomInPos(CurrentGridPos).Connections;
+			_currentGridPos = _mapManager.WorldToGrid(transform.position);
+			_moveUI.Connections = _mapManager.GetRoomInPos(_currentGridPos).Connections;
 			
 			_selfLight.UpdateLight();
 			foreach (LightSource lightSource in ExtraLight)
@@ -118,14 +117,18 @@ public class Player : MonoBehaviour
 			return;
 		}
 		
-		float halfWidth = Map.Width / 2f;
-		float halfHeight = Map.Height / 2f;
+		float halfWidth = _mapManager.Width / 2f;
+		float halfHeight = _mapManager.Height / 2f;
 		bool teleported = false;
 		Vector3 teleportedPos = transform.position;
-		if (transform.position.x > Map.MapCenter.x + halfWidth) { teleported = true; teleportedPos.x = Map.MapCenter.x - halfWidth; }
-		if (transform.position.x < Map.MapCenter.x - halfWidth) { teleported = true; teleportedPos.x = Map.MapCenter.x + halfWidth; }
-		if (transform.position.z > Map.MapCenter.z + halfHeight) { teleported = true; teleportedPos.z = Map.MapCenter.z - halfHeight; }
-		if (transform.position.z < Map.MapCenter.z - halfHeight) { teleported = true; teleportedPos.z = Map.MapCenter.z + halfHeight; }
+		if (transform.position.x > _mapManager.MapCenter.x + halfWidth)
+		{ teleported = true; teleportedPos.x = _mapManager.MapCenter.x - halfWidth; }
+		if (transform.position.x < _mapManager.MapCenter.x - halfWidth)
+		{ teleported = true; teleportedPos.x = _mapManager.MapCenter.x + halfWidth; }
+		if (transform.position.z > _mapManager.MapCenter.z + halfHeight)
+		{ teleported = true; teleportedPos.z = _mapManager.MapCenter.z - halfHeight; }
+		if (transform.position.z < _mapManager.MapCenter.z - halfHeight)
+		{ teleported = true; teleportedPos.z = _mapManager.MapCenter.z + halfHeight; }
 
 		if (teleported)
 		{
@@ -144,7 +147,7 @@ public class Player : MonoBehaviour
 	private void TeleportToGridPos(Vector2Int pos)
 	{
 		_controller.enabled = false;
-		transform.position = Map.GridToWorld(pos);
+		transform.position = _mapManager.GridToWorld(pos);
 		_controller.enabled = true;
 	}
 	[Button] public void TeleportToGridPos(int x, int y) => TeleportToGridPos(new(x, y));

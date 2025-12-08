@@ -11,19 +11,16 @@ using Utilities;
 using Zenject;
 using Void = EditorAttributes.Void;
 
-//TODO: Inject
 public class MapManager : MonoBehaviour
 {
 	public Vector3 MapCenter;
 	public Vector2 CellSize;
 	public RoomSO StartRoom;
 	public Room NoRoomPrefab;
-	public PreviewManager Preview;
-	public TilesSelector Tiles;
-	public Player Player;
 	
 	private GridMap _grid;
 	private Room _cachedRoomObject;
+	private Vector2Int _connectingSourceGridPos;
 	private readonly Dictionary<Vector2Int, Room> _roomObjects = new();
 	private readonly Dictionary<Vector2Int, int> _lightedRooms = new();
 	private readonly List<Vector2Int> _waitingForLightRooms = new();
@@ -33,6 +30,8 @@ public class MapManager : MonoBehaviour
 	
 	[Inject] private EventBus _eventBus;
 	[Inject] private DungeonConfig _config;
+	[Inject] private TilesSelector _tilesSelector;
+	[Inject] private PreviewManager _previewManager;
 
 	private void Awake()
 	{
@@ -55,6 +54,8 @@ public class MapManager : MonoBehaviour
 		_eventBus.SubmitPlacing.EventRaised -= OnSubmitPlacing;
 		_eventBus.LightChanged.EventRaised -= OnLightChanged;
 	}
+
+	public void SetConnectingSource(Vector2Int sourceGridPos) => _connectingSourceGridPos = sourceGridPos;
 
 	public RoomSO GetRoomInPos(Vector2Int position) => _grid.Get(position.x, position.y);
 
@@ -99,18 +100,6 @@ public class MapManager : MonoBehaviour
 		}
 
 		PlaceRoom(StartRoom, WorldToGrid(MapCenter), false);
-	}
-
-	private void CreateBorders()
-	{
-		for (int x = -1; x <= _grid.Width; x++)
-			DIGlobal.Instantiate(NoRoomPrefab.gameObject, GridToWorld(new(x, -1)), Quaternion.identity, transform);
-		for (int x = -1; x <= _grid.Width; x++)
-			DIGlobal.Instantiate(NoRoomPrefab.gameObject, GridToWorld(new(x, _grid.Height)), Quaternion.identity, transform);
-		for (int y = -1; y <= _grid.Height; y++)
-			DIGlobal.Instantiate(NoRoomPrefab.gameObject, GridToWorld(new(-1, y)), Quaternion.identity, transform);
-		for (int y = -1; y <= _grid.Height; y++)
-			DIGlobal.Instantiate(NoRoomPrefab.gameObject, GridToWorld(new(_grid.Width, y)), Quaternion.identity, transform);
 	}
 	
 	private void PlaceRoom(RoomSO roomConfig, Vector2Int gridPos, bool updateFog = true)
@@ -184,13 +173,40 @@ public class MapManager : MonoBehaviour
 		room.Direction = direction;
 	}
 
+	private void LightCast(Vector2Int lightPos, int intensity, Action<Vector2Int> callback)
+	{
+		callback(_grid.LoopPosition(lightPos));
+
+		bool downBlocked = false, leftBlocked = false, upBlocked = false, rightBlocked = false;
+		for (int i = 1; i <= intensity; i++)
+		{
+			if (!GetRoomInPos(lightPos + Vector2Int.down * (i - 1)).Connections.Contains(Direction.Down))
+				downBlocked = true;
+			if (!GetRoomInPos(lightPos + Vector2Int.left * (i - 1)).Connections.Contains(Direction.Left))
+				leftBlocked = true;
+			if (!GetRoomInPos(lightPos + Vector2Int.right * (i - 1)).Connections.Contains(Direction.Right))
+				rightBlocked = true;
+			if (!GetRoomInPos(lightPos + Vector2Int.up * (i - 1)).Connections.Contains(Direction.Up))
+				upBlocked = true;
+			
+			if (!downBlocked)
+				callback(_grid.LoopPosition(lightPos + Vector2Int.down * i));
+			if (!leftBlocked)
+				callback(_grid.LoopPosition(lightPos + Vector2Int.left * i));
+			if (!upBlocked)
+				callback(_grid.LoopPosition(lightPos + Vector2Int.up * i));
+			if (!rightBlocked)
+				callback(_grid.LoopPosition(lightPos + Vector2Int.right * i));
+		}
+	}
+	
 	private void OnPreviewMove(Vector3 pos)
 	{
 		Vector2Int gridPos = WorldToGrid(pos, true);
 
 		bool isValid = _waitingForLightRooms.Contains(gridPos) &&
-			_grid.IsValidPlace(gridPos, Tiles.Selected.Content.Connections, Player.CurrentGridPos);
-		Preview.SetBlocked(!isValid);
+			_grid.IsValidPlace(gridPos, _tilesSelector.Selected.Content.Connections, _connectingSourceGridPos);
+		_previewManager.SetBlocked(!isValid);
 
 		if (_cachedRoomObject != null)
 			GameObjectManipulator.ToggleCollision(_cachedRoomObject.gameObject, true);
@@ -201,16 +217,16 @@ public class MapManager : MonoBehaviour
 
 	private void OnPreviewRotated(Vector3 pos)
 	{
-		Direction newDirection = (Direction)((int)(Tiles.Selected.Content.Direction + 1) % (int)Direction.Count);
-		RotateRoom(Tiles.Selected.Content, newDirection);
+		Direction newDirection = (Direction)((int)(_tilesSelector.Selected.Content.Direction + 1) % (int)Direction.Count);
+		RotateRoom(_tilesSelector.Selected.Content, newDirection);
 		
 		OnPreviewMove(pos);
 	}
 
 	private void OnSubmitPlacing(Vector3 pos)
 	{
-		PlaceRoom(Tiles.Selected.Content, WorldToGrid(pos));
-		Tiles.Remove(Tiles.Selected);
+		PlaceRoom(_tilesSelector.Selected.Content, WorldToGrid(pos));
+		_tilesSelector.Remove(_tilesSelector.Selected);
 	}
 
 	private void OnLightChanged(LightChangedPayload context)
@@ -254,34 +270,8 @@ public class MapManager : MonoBehaviour
 			_eventBus.RequestTiles.RaiseEvent(_waitingForLightRooms.Count);
 		else _eventBus.ToggleMovementUI.RaiseEvent(true);
 	}
-
-	private void LightCast(Vector2Int lightPos, int intensity, Action<Vector2Int> callback)
-	{
-		callback(_grid.LoopPosition(lightPos));
-
-		bool downBlocked = false, leftBlocked = false, upBlocked = false, rightBlocked = false;
-		for (int i = 1; i <= intensity; i++)
-		{
-			if (!GetRoomInPos(lightPos + Vector2Int.down * (i - 1)).Connections.Contains(Direction.Down))
-				downBlocked = true;
-			if (!GetRoomInPos(lightPos + Vector2Int.left * (i - 1)).Connections.Contains(Direction.Left))
-				leftBlocked = true;
-			if (!GetRoomInPos(lightPos + Vector2Int.right * (i - 1)).Connections.Contains(Direction.Right))
-				rightBlocked = true;
-			if (!GetRoomInPos(lightPos + Vector2Int.up * (i - 1)).Connections.Contains(Direction.Up))
-				upBlocked = true;
-			
-			if (!downBlocked)
-				callback(_grid.LoopPosition(lightPos + Vector2Int.down * i));
-			if (!leftBlocked)
-				callback(_grid.LoopPosition(lightPos + Vector2Int.left * i));
-			if (!upBlocked)
-				callback(_grid.LoopPosition(lightPos + Vector2Int.up * i));
-			if (!rightBlocked)
-				callback(_grid.LoopPosition(lightPos + Vector2Int.right * i));
-		}
-	}
 	
+	#region INSPECTOR_TEST
 #if UNITY_EDITOR
 	[FoldoutGroup("Test Position Convertion", nameof(_testPos), nameof(_testGridPos))]
 	[SerializeField]
@@ -327,4 +317,5 @@ public class MapManager : MonoBehaviour
 		PlaceRoom(_testPlaceRoom, _testPlacePos, _testPlaceUpdateFog);
 	}
 #endif
+	#endregion
 }

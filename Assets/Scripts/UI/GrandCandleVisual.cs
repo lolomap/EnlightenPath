@@ -11,7 +11,6 @@ namespace UI
 {
 	public class GrandCandleVisual : MonoBehaviour
 	{
-		public TilesSelector TilesTarget;
 		public float MeltDuration;
 		
 		private GrandCandle _candle;
@@ -20,6 +19,7 @@ namespace UI
 
 		[Inject] private DungeonConfig _config;
 		[Inject] private EventBus _eventBus;
+		[Inject] private TilesSelector _tilesSelector;
 		
 		private void Awake()
 		{
@@ -54,8 +54,8 @@ namespace UI
 			List<RoomSO> rooms = _candle.Pop(count, true);
 			UpdateHeight();
 			
-			if (!destroy && TilesTarget != null)
-				TilesTarget.AddTiles(rooms);
+			if (!destroy && _tilesSelector != null)
+				_tilesSelector.AddTiles(rooms);
 		}
 	}
 }

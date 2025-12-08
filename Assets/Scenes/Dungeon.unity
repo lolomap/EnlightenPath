@@ -611,7 +611,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   Speed: 0.5
   StopDistance: 0.1
-  Map: {fileID: 504605340}
   ExtraLight: []
 --- !u!143 &192308857
 CharacterController:
@@ -1414,9 +1413,6 @@ MonoBehaviour:
   CellSize: {x: 10, y: 10}
   StartRoom: {fileID: 11400000, guid: 831651d4309c6c841ac0980932278d03, type: 2}
   NoRoomPrefab: {fileID: -1646332442189922222, guid: ef7d4f3df59c942428a41adc8e2eafb3, type: 3}
-  Preview: {fileID: 1899584570}
-  Tiles: {fileID: 978642337}
-  Player: {fileID: 192308856}
   _testPos: {x: 0, y: 0, z: 0}
   _testGridPos: {x: 0, y: 0}
   _testPlacePos: {x: 0, y: 0}
@@ -1469,6 +1465,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DI.DungeonInstaller
   EventBus: {fileID: 11400000, guid: 9fd89ac121b76fc45b36758e2741b287, type: 2}
   DungeonConfig: {fileID: 11400000, guid: 66c89a8b044a64140b7252d9236cfb6c, type: 2}
+  MapManager: {fileID: 504605340}
+  TilesSelector: {fileID: 978642337}
+  PreviewManager: {fileID: 1899584570}
 --- !u!4 &535076245
 Transform:
   m_ObjectHideFlags: 0
@@ -2276,7 +2275,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.TilesSelector
   TilePrefab: {fileID: 6684801037671975160, guid: 161c31e1ef522de4f9c932ff0f1511b3, type: 3}
-  Preview: {fileID: 1899584570}
 --- !u!1 &1047714101
 GameObject:
   m_ObjectHideFlags: 0
@@ -2636,7 +2634,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExtentCamera
   CameraOrientation: 0
-  Map: {fileID: 504605340}
   PlaneLayer:
     serializedVersion: 2
     m_Bits: 16
@@ -2767,7 +2764,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExtentCamera
   CameraOrientation: 2
-  Map: {fileID: 504605340}
   PlaneLayer:
     serializedVersion: 2
     m_Bits: 16
@@ -3230,7 +3226,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExtentCamera
   CameraOrientation: 1
-  Map: {fileID: 504605340}
   PlaneLayer:
     serializedVersion: 2
     m_Bits: 16
@@ -3641,7 +3636,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7076fc5576e4702a2423fc5f377ca42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.GrandCandleVisual
-  TilesTarget: {fileID: 978642337}
   MeltDuration: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

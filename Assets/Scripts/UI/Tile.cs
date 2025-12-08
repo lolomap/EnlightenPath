@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Zenject;
 namespace UI
 {
     public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
@@ -16,12 +17,12 @@ namespace UI
         public float HoverScaleTime;
         public RoomSO Content { get; private set; }
 
-        private TilesSelector _container;
         private bool _isHighlighted;
+        
+        [Inject] private TilesSelector _tilesSelector;
 
         private void Awake()
         {
-            _container = transform.parent.GetComponent<TilesSelector>();
             Preview.rectTransform.DOShakeAnchorPos(ShakeDuration, ShakeStrength).SetLoops(-1);
         }
 
@@ -44,7 +45,7 @@ namespace UI
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            _container.Select(this);
+            _tilesSelector.Select(this);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
