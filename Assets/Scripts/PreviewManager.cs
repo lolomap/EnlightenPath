@@ -10,23 +10,37 @@ public class PreviewManager : MonoBehaviour
     public Color PreviewTint;
     public Color PreviewBlockTint;
     public float PreviewHeight;
-    public Vector2 CellSizeSnapping;
     public LayerMask PlaneLayer;
     public int RenderLayer;
     
     private GameObject _previewObject;
     private int _previewFogRevealer;
     private bool _isBlocked;
+    private bool _isRoom;
+    private RoomSO _previewRoom;
+    private Room _cachedRoomObject;
 
     [Inject] private EventBus _eventBus;
+    [Inject] private MapManager _mapManager;
+    [Inject] private LightManager _lightManager;
 
     private void Update()
     {
+        bool moved = false;
         if (_previewObject != null)
-            UpdatePosition();
+            moved = UpdatePosition();
+        if (moved && _isRoom)
+            ProcessRoom();
     }
 
-    public void Preview(GameObject prefab, Quaternion rotation)
+    public void PreviewRoom(RoomSO room, Quaternion rotation)
+    {
+        _isRoom = true;
+        _previewRoom = room;
+        Preview(room.Prefab.gameObject, rotation);
+    }
+
+    private void Preview(GameObject prefab, Quaternion rotation)
     {
         if (_previewObject != null)
             DropPreview();
@@ -34,13 +48,15 @@ public class PreviewManager : MonoBehaviour
         SetupPreview(prefab, rotation);
     }
 
-    public void DropPreview()
+    private void DropPreview()
     {
         Destroy(_previewObject);
+        _isRoom = false;
         _previewObject = null;
+        _previewRoom = null;
     }
 
-    public void SetBlocked(bool isBlocked)
+    private void SetBlocked(bool isBlocked)
     {
         _isBlocked = isBlocked;
         GameObjectManipulator.SetTint(_previewObject, isBlocked ? PreviewBlockTint : PreviewTint);
@@ -49,29 +65,50 @@ public class PreviewManager : MonoBehaviour
     private void SetupPreview(GameObject prefab, Quaternion rotation)
     {
         _previewObject = Instantiate(prefab, Vector3.zero, rotation, transform);
-
+        
         _previewObject.layer = RenderLayer;
         GameObjectManipulator.SetTint(_previewObject, PreviewTint);
         GameObjectManipulator.ToggleCollision(_previewObject, false);
         UpdatePosition();
     }
 
-    private void UpdatePosition()
+    private bool UpdatePosition()
     {
         Ray ray = TargetCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        if (!Physics.Raycast(ray, out RaycastHit hit, 1000f, PlaneLayer)) return;
+        if (!Physics.Raycast(ray, out RaycastHit hit, 1000f, PlaneLayer)) return false;
         Vector3 newPos = hit.point;
         
         newPos.y = PreviewHeight;
-        if (CellSizeSnapping.x > 0)
-            newPos.x = Mathf.Round(newPos.x / CellSizeSnapping.x) * CellSizeSnapping.x;
-        if (CellSizeSnapping.y > 0)
-            newPos.z = Mathf.Round(newPos.z / CellSizeSnapping.y) * CellSizeSnapping.y;
+        if (_mapManager.CellSize.x > 0)
+            newPos.x = Mathf.Round((newPos.x + _mapManager.CellSize.x * 0.5f) / _mapManager.CellSize.x)
+                * _mapManager.CellSize.x
+                - _mapManager.CellSize.x * 0.5f;
+        if (_mapManager.CellSize.y > 0)
+            newPos.z = Mathf.Round((newPos.z + _mapManager.CellSize.y * 0.5f) / _mapManager.CellSize.y)
+                * _mapManager.CellSize.y
+                - _mapManager.CellSize.y * 0.5f;
 
-        if (newPos == _previewObject.transform.position) return;
+        if (newPos == _previewObject.transform.position) return false;
         
         _previewObject.transform.position = newPos;
-        _eventBus.PreviewMoved.RaiseEvent(_previewObject.transform.position);
+        
+        return true;
+    }
+
+    private void ProcessRoom()
+    {
+        Vector2Int gridPos = _mapManager.WorldToGrid(_previewObject.transform.position, true);
+
+        bool isValid = _lightManager.WaitingForLightRooms.Contains(gridPos) &&
+            _mapManager.IsValidPlace(gridPos, _previewRoom.Connections, _mapManager.ConnectingSourceGridPos);
+        SetBlocked(!isValid);
+
+        if (_cachedRoomObject != null)
+            GameObjectManipulator.ToggleCollision(_cachedRoomObject.gameObject, true);
+        _cachedRoomObject = _mapManager.GetRoomObjectInPos(gridPos);
+        if (_cachedRoomObject != null)
+            GameObjectManipulator.ToggleCollision(_cachedRoomObject.gameObject, false);
+        _eventBus.FogObstaclesDirty.RaiseEvent();
     }
     
     public void OnCancel(InputAction.CallbackContext context)
@@ -85,7 +122,16 @@ public class PreviewManager : MonoBehaviour
         if (_previewObject == null) return;
         if (_isBlocked) return;
 
-        _eventBus.SubmitPlacing.RaiseEvent(_previewObject.transform.position);
+        if (_isRoom)
+        {
+            Vector2Int gridPos = _mapManager.WorldToGrid(_previewObject.transform.position, true);
+		
+            _mapManager.PlaceRoom(_previewRoom, gridPos);
+		
+            _eventBus.RemoveSelectedTile.RaiseEvent();
+            _lightManager.WaitingForLightRooms.Remove(gridPos);
+        }
+        
         DropPreview();
     }
 
@@ -95,6 +141,12 @@ public class PreviewManager : MonoBehaviour
         if (_previewObject == null) return;
         
         _previewObject.transform.Rotate(0, 90, 0);
-        _eventBus.PreviewRotated.RaiseEvent(_previewObject.transform.position);
+        
+        if (_isRoom)
+        {
+            Direction newDirection = (Direction)((int)(_previewRoom.Direction + 1) % (int)Direction.Count);
+            MapManager.RotateRoom(_previewRoom, newDirection);
+            ProcessRoom();
+        }
     }
 }

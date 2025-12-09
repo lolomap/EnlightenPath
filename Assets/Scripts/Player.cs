@@ -1,52 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
 using EditorAttributes;
 using Events;
-using UI;
 using UnityEngine;
 using Utilities;
 using Zenject;
 
+[RequireComponent(typeof(LightSource))]
 public class Player : MonoBehaviour
 {
 	public float Speed;
 	public float StopDistance;
-	public List<LightSource> ExtraLight;
 
 	private bool _isMoving;
 	private Vector3 _direction;
 	private Vector3 _targetPos;
 	private Vector2Int _currentGridPos;
 	private CharacterController _controller;
-	private MoveUI _moveUI;
-	private LightSource _selfLight;
 
 	[Inject] private EventBus _eventBus;
 	[Inject] private MapManager _mapManager;
+	[Inject] private LightManager _lightManager;
 	
 	private void Awake()
 	{
 		_controller = GetComponent<CharacterController>();
-		_moveUI = GetComponentInChildren<MoveUI>();
-		_selfLight = GetComponent<LightSource>();
+		_lightManager.RegisterLightSource(GetComponent<LightSource>());
 	}
 	
 	private void Start()
 	{
+		transform.position = _mapManager.StartPos;
 		_currentGridPos = _mapManager.WorldToGrid(transform.position);
-		_mapManager.SetConnectingSource(_currentGridPos);
-		_moveUI.Connections = _mapManager.GetRoomInPos(_mapManager.WorldToGrid(transform.position)).Connections;
+		_mapManager.ConnectingSourceGridPos = _currentGridPos;
 	}
 
 	private void OnEnable()
 	{
-		_eventBus.FogIsReady.EventRaised += _selfLight.UpdateLight;
 		_eventBus.ForceMove.EventRaised += MoveToGridPos;
 	}
 
 	private void OnDisable()
 	{
-		_eventBus.FogIsReady.EventRaised -= _selfLight.UpdateLight;
 		_eventBus.ForceMove.EventRaised -= MoveToGridPos;
 	}
 
@@ -59,8 +53,6 @@ public class Player : MonoBehaviour
 	private void RequestMove(Direction direction)
 	{
 		if (_isMoving) return;
-		
-		_moveUI.Toggle(false);
 		
 		Vector2Int gridPos = _mapManager.WorldToGrid(transform.position);
 
@@ -109,14 +101,8 @@ public class Player : MonoBehaviour
 		{
 			_isMoving = false;
 			_currentGridPos = _mapManager.WorldToGrid(transform.position);
-			_mapManager.SetConnectingSource(_currentGridPos);
-			_moveUI.Connections = _mapManager.GetRoomInPos(_currentGridPos).Connections;
-			
-			_selfLight.UpdateLight();
-			foreach (LightSource lightSource in ExtraLight)
-			{
-				lightSource.UpdateLight();
-			}
+			_mapManager.ConnectingSourceGridPos = _currentGridPos;
+			_lightManager.UpdateAllSources();
 			
 			return;
 		}

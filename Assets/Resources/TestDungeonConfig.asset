@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6eeb2b13a1b947909d314e7608ea4490, type: 3}
   m_Name: TestDungeonConfig
   m_EditorClassIdentifier: Assembly-CSharp::Data.DungeonConfig
-  Width: 5
-  Height: 5
+  Width: 6
+  Height: 6
   GrandCandle:
     Rooms:
       _serializedList:

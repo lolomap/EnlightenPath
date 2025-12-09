@@ -1,5 +1,4 @@
-﻿using Events.EventPayloads;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Events
 {
@@ -8,12 +7,16 @@ namespace Events
     {
         public readonly GenericEventChannel FogIsReady = new();
         public readonly GenericEventChannel FogObstaclesDirty = new();
-        public readonly GenericEventChannel<LightChangedPayload> LightChanged = new();
+        
+        public readonly GenericEventChannel<LightSource> LightSourceInstantiated = new();
+        
         public readonly GenericEventChannel<bool> ToggleMovementUI = new();
         public readonly GenericEventChannel<Vector2Int> MovedToDark = new();
         public readonly GenericEventChannel<Vector2Int> ForceMove = new();
-        public readonly GenericEventChannel<Vector3> PreviewMoved = new();
-        public readonly GenericEventChannel<Vector3> PreviewRotated = new();
-        public readonly GenericEventChannel<Vector3> SubmitPlacing = new();
+
+        public readonly GenericEventChannel RemoveSelectedTile = new();
+
+        public readonly GenericEventChannel MapIsReady = new();
+        public readonly GenericEventChannel<ISlot> ItemPicked = new();
     }
 }

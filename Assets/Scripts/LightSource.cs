@@ -1,24 +1,29 @@
-﻿using EditorAttributes;
-using Events;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
 
 public class LightSource : MonoBehaviour
 {
     public int Intensity;
     private Vector3 _lastPosition;
-    
-    [Inject] private EventBus _eventBus;
+
+    [Inject] private MapManager _mapManager;
 
     private void Awake()
     {
         _lastPosition = transform.position;
     }
 
-    [Button]
-    public void UpdateLight()
+    public LightChangedContext UpdateLightPos()
     {
-        _eventBus.LightChanged.RaiseEvent(new() {Last = _lastPosition, Present = transform.position, Intensity = Intensity});
+        LightChangedContext result = new()
+        {
+            Last = _mapManager.WorldToGrid(_lastPosition),
+            Present = _mapManager.WorldToGrid(transform.position),
+            Intensity = Intensity
+        };
+        
         _lastPosition = transform.position;
+        
+        return result;
     }
 }
