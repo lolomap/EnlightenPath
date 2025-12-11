@@ -3,7 +3,6 @@ using Data;
 using DI;
 using EditorAttributes;
 using Events;
-using Items;
 using Items.Data;
 using UnityEngine;
 using Utilities;
@@ -47,6 +46,17 @@ public class MapManager : MonoBehaviour
 
 	public RoomSO GetRoomInPos(Vector2Int position) => _grid.Get(position.x, position.y);
 	public Room GetRoomObjectInPos(Vector2Int position) => _roomObjects.GetValueOrDefault(position);
+	public Transform GetFreeSpawnPivot(Vector2Int position)
+	{
+		Room room = _roomObjects[position];
+		foreach ((SpawnLocation _, Transform pivot) in room.SpawnPivots)
+		{
+			if (pivot.childCount > 0) continue;
+			return pivot;
+		}
+
+		return null;
+	}
 
 	public Vector2Int WorldToGrid(Vector3 position, bool loop = false)
 	{
@@ -177,15 +187,23 @@ public class MapManager : MonoBehaviour
 		foreach (SpawnObjectSO spawnable in room.SpawnedInside)
 		{
 			//TODO: chance
-			//TODO: position
-			Vector3 position = GridToWorld(gridPos);
-			position += Vector3.right * 3;
 
-			ISpawnObject obj = DIGlobal.Instantiate(spawnable.Prefab, position, Quaternion.identity, transform).GetComponent<ISpawnObject>();
-			LightSource lightSource = ((MonoBehaviour)obj).GetComponent<LightSource>();
+			Room roomObject = _roomObjects[gridPos];
+			
+			Transform pivot = null;
+			foreach (SpawnLocation location in spawnable.PossibleLocations)
+			{
+				if (!roomObject.SpawnPivots.TryGetValue(location, out pivot)) continue;
+				if (pivot.childCount > 0) pivot = null;
+				else break;
+			}
+			if (pivot == null) return;
+			
+			GameObject obj = DIGlobal.Instantiate(spawnable.Prefab, pivot);
+			LightSource lightSource = obj.GetComponent<LightSource>();
 			if (lightSource != null)
 				_eventBus.LightSourceInstantiated.RaiseEvent(lightSource);
-			obj.OnSpawn();
+			obj.GetComponent<ISpawnObject>().OnSpawn();
 		}
 	}
 	

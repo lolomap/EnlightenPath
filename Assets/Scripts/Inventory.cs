@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Events;
 using UnityEngine;
@@ -18,7 +19,7 @@ public class Inventory : MonoBehaviour
     private IHandSlot _rightHand;
     private IBeltSlot _belt;
     
-    private IEnumerable<ISlot> AllSlots => new ISlot[]
+    private ISlot[] AllSlots => new ISlot[]
     {
         _leftHand,
         _rightHand,
@@ -30,6 +31,13 @@ public class Inventory : MonoBehaviour
     private void OnEnable()
     {
         _eventBus.ItemPicked.EventRaised += OnPicked;
+        _eventBus.ItemDropped.EventRaised += OnDropped;
+    }
+
+    private void OnDisable()
+    {
+        _eventBus.ItemPicked.EventRaised -= OnPicked;
+        _eventBus.ItemDropped.EventRaised -= OnDropped;
     }
 
     public IEnumerable<LightSource> GetLightSources()
@@ -40,11 +48,11 @@ public class Inventory : MonoBehaviour
             .Where(lightSource => lightSource != null);
     }
     
-    private void OnPicked(ISlot payload)
+    private void OnPicked(ISlot item)
     {
-        MonoBehaviour picked = (MonoBehaviour)payload;
+        MonoBehaviour picked = (MonoBehaviour)item;
         
-        switch (payload)
+        switch (item)
         {
             case IHandSlot slot:
             {
@@ -67,6 +75,27 @@ public class Inventory : MonoBehaviour
             }
             case IBeltSlot:
                 break;
+        }
+    }
+
+    private void OnDropped(ISlot item)
+    {
+        switch (item)
+        {
+            case IHandSlot:
+            {
+                if (_rightHand == item)
+                    _rightHand = null;
+                else if (_leftHand == item)
+                    _leftHand = null;
+                
+                break;
+            }
+            case IBeltSlot:
+            {
+                _belt = null;
+                break;
+            }
         }
     }
 }

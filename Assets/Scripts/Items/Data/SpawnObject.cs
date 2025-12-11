@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Items.Data
 {
@@ -22,12 +24,18 @@ namespace Items.Data
 	{
 		public GameObject Prefab;
 		public float SpawnChance;
-		public SpawnLocation Location = SpawnLocation.UpRightCorner;
+		public List<SpawnLocation> PossibleLocations = new() { SpawnLocation.UpRightCorner };
 
 		private void OnValidate()
 		{
 			if (Prefab == null)
 				Debug.LogWarning("No prefab to spawn object!");
+
+			if (PossibleLocations.Count < 1)
+			{
+				Debug.LogWarning("Object must have at least one location to spawn! Added automatically");
+				PossibleLocations.Add(SpawnLocation.UpRightCorner);
+			}
 		}
 	}
 

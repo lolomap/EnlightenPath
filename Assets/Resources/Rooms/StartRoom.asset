@@ -18,4 +18,10 @@ MonoBehaviour:
   Direction: 0
   SpawnedInside:
   - {fileID: 11400000, guid: 60db35ddcb003f24db15ccdcbc34059f, type: 2}
-  GridPos: {x: 0, y: 0}
+  - {fileID: 11400000, guid: 60db35ddcb003f24db15ccdcbc34059f, type: 2}
+  - {fileID: 11400000, guid: 60db35ddcb003f24db15ccdcbc34059f, type: 2}
+  - {fileID: 11400000, guid: 60db35ddcb003f24db15ccdcbc34059f, type: 2}
+  - {fileID: 11400000, guid: 60db35ddcb003f24db15ccdcbc34059f, type: 2}
+  - {fileID: 11400000, guid: 60db35ddcb003f24db15ccdcbc34059f, type: 2}
+  - {fileID: 11400000, guid: 60db35ddcb003f24db15ccdcbc34059f, type: 2}
+  - {fileID: 11400000, guid: 60db35ddcb003f24db15ccdcbc34059f, type: 2}

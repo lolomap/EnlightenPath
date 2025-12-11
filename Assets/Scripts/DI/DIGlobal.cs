@@ -9,5 +9,9 @@ namespace DI
         {
             return Object.FindAnyObjectByType<SceneContext>().Container.InstantiatePrefab(prefab, position, rotation, parent);
         }
+        public static GameObject Instantiate(GameObject prefab, Transform parent)
+        {
+            return Object.FindAnyObjectByType<SceneContext>().Container.InstantiatePrefab(prefab, parent);
+        }
     }
 }

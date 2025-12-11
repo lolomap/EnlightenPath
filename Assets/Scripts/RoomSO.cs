@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Items;
 using Items.Data;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Utilities;
 
 [CreateAssetMenu(fileName = "Room", menuName = "Game/Room", order = 0)]
@@ -12,7 +12,8 @@ public class RoomSO : ScriptableObject
     public List<Direction> Connections = new() { Direction.Down };
     public Direction Direction;
     public List<SpawnObjectSO> SpawnedInside;
-    public Vector2Int GridPos;
+    
+    public Vector2Int GridPos { get; set; }
     
     private void OnValidate()
     {
