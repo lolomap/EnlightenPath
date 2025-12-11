@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EditorAttributes;
 using Events;
 using UnityEngine;
 using Utilities;
@@ -16,7 +17,6 @@ public struct LightChangedContext
 public class LightManager : MonoBehaviour
 {
     private bool _isReady;
-    private int _lightSourcesProcessed;
     private readonly List<LightSource> _lightSources = new();
     private readonly Dictionary<Vector2Int, int> _lightedRooms = new();
 
@@ -38,6 +38,7 @@ public class LightManager : MonoBehaviour
         _eventBus.LightSourceInstantiated.EventRaised -= RegisterLightSource;
     }
     
+    [Button]
     public void UpdateAllSources()
     {
         List<LightChangedContext> changes = _lightSources.Select(lightSource => lightSource.UpdateLightPos()).ToList();
@@ -104,14 +105,10 @@ public class LightManager : MonoBehaviour
 		
         _eventBus.FogObstaclesDirty.RaiseEvent();
 
-        _lightSourcesProcessed++;
         if (WaitingForLightRooms.Count > 0)
             _grandCandle.Pick(WaitingForLightRooms.Count);
-        else if (_lightSourcesProcessed >= _lightSources.Count)
-        {
-            _lightSourcesProcessed = 0;
+        else
             _eventBus.ToggleMovementUI.RaiseEvent(true);
-        }
     }
     
     private void LightCast(Vector2Int lightPos, int intensity, Action<Vector2Int> callback)

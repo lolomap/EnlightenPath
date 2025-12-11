@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Items;
+using Items.Data;
 using UnityEngine;
 using Utilities;
 
@@ -12,7 +13,7 @@ public class RoomSO : ScriptableObject
     public Direction Direction;
     public List<SpawnObjectSO> SpawnedInside;
     public Vector2Int GridPos;
-
+    
     private void OnValidate()
     {
         if (Connections.Count < 1)
@@ -20,5 +21,8 @@ public class RoomSO : ScriptableObject
             Debug.LogWarning("Room must have at least one connection. Added automatically");
             Connections.Add(Direction.Down);
         }
+
+        if (Prefab == null)
+            Debug.LogWarning("No prefab to spawn room!");
     }
 }

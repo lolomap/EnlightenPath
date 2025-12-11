@@ -97,15 +97,16 @@ public class PreviewManager : MonoBehaviour
 
     private void ProcessRoom()
     {
-        Vector2Int gridPos = _mapManager.WorldToGrid(_previewObject.transform.position, true);
+        Vector2Int gridPos = _mapManager.WorldToGrid(_previewObject.transform.position);
+        Vector2Int gridPosLooped = _mapManager.GridLoop(gridPos);
 
-        bool isValid = _lightManager.WaitingForLightRooms.Contains(gridPos) &&
+        bool isValid = _lightManager.WaitingForLightRooms.Contains(gridPosLooped) &&
             _mapManager.IsValidPlace(gridPos, _previewRoom.Connections, _mapManager.ConnectingSourceGridPos);
         SetBlocked(!isValid);
 
         if (_cachedRoomObject != null)
             GameObjectManipulator.ToggleCollision(_cachedRoomObject.gameObject, true);
-        _cachedRoomObject = _mapManager.GetRoomObjectInPos(gridPos);
+        _cachedRoomObject = _mapManager.GetRoomObjectInPos(gridPosLooped);
         if (_cachedRoomObject != null)
             GameObjectManipulator.ToggleCollision(_cachedRoomObject.gameObject, false);
         _eventBus.FogObstaclesDirty.RaiseEvent();

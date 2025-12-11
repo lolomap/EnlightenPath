@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Data;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Utilities;
 
@@ -40,12 +38,6 @@ public class GridMap
 
 	public bool IsValidPlace(Vector2Int targetPos, List<Direction> targetConnections, Vector2Int originPos, bool allowOccupied = false)
 	{
-		(targetPos.x, targetPos.y) = LoopPosition(targetPos.x, targetPos.y);
-		(originPos.x, originPos.y) = LoopPosition(originPos.x, originPos.y);
-
-		if (targetPos.x != originPos.x && targetPos.y != originPos.y)
-			return false;
-		
 		Direction originToTargetDirection = Direction.Down;
 		if (targetPos.y > originPos.y)
 			originToTargetDirection = Direction.Up;
@@ -54,6 +46,12 @@ public class GridMap
 		else if (targetPos.x > originPos.x)
 			originToTargetDirection = Direction.Right;
 		
+		(targetPos.x, targetPos.y) = LoopPosition(targetPos.x, targetPos.y);
+		(originPos.x, originPos.y) = LoopPosition(originPos.x, originPos.y);
+
+		if (targetPos.x != originPos.x && targetPos.y != originPos.y)
+			return false;
+		
 		RoomSO target = Get(targetPos.x, targetPos.y);
 		RoomSO origin = Get(originPos.x, originPos.y);
 		
@@ -61,16 +59,8 @@ public class GridMap
 			return false;
 
 		List<Direction> originConnections = origin.Connections;
-		
-		return
-			originToTargetDirection == Direction.Up &&
-				targetConnections.Contains(Direction.Down) && originConnections.Contains(Direction.Up) ||
-			originToTargetDirection == Direction.Right &&
-				targetConnections.Contains(Direction.Left) && originConnections.Contains(Direction.Right) ||
-			originToTargetDirection == Direction.Down &&
-				targetConnections.Contains(Direction.Up) && originConnections.Contains(Direction.Down) ||
-			originToTargetDirection == Direction.Left &&
-				targetConnections.Contains(Direction.Right) && originConnections.Contains(Direction.Left);
+
+		return Connections.HasConnected(originToTargetDirection, targetConnections, originConnections);
 	}
 
 	public Vector2Int LoopPosition(Vector2Int pos)

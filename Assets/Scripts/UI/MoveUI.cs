@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Events;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,9 +31,17 @@ namespace UI
 
         private void Toggle(bool isEnabled)
         {
-            //TODO: FIX CONNECTIONS
             if (isEnabled)
-                _connections = _mapManager.GetRoomInPos(_mapManager.WorldToGrid(transform.position)).Connections;
+            {
+                Vector2Int gridPos = _mapManager.WorldToGrid(transform.position);
+                _connections = _mapManager.GetRoomInPos(gridPos).Connections;
+                _connections = _connections.Where(connection =>
+                {
+                    List<Direction> neighbourConnections = _mapManager.GetRoomInPos(gridPos + Connections.ToOffset(connection))?
+                        .Connections ?? new() { Direction.Down, Direction.Left, Direction.Up, Direction.Right };
+                    return Connections.HasConnected(connection, neighbourConnections, _connections);
+                }).ToList();
+            }
             
             MoveDown.gameObject.SetActive(isEnabled && _connections.Contains(Direction.Down));
             MoveLeft.gameObject.SetActive(isEnabled && _connections.Contains(Direction.Left));

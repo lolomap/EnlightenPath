@@ -17,9 +17,9 @@ MonoBehaviour:
   GrandCandle:
     Rooms:
       _serializedList:
-      - Key: {fileID: 11400000, guid: 6b57ffdf38013294fa8b9ceb3d9d9c98, type: 2}
-        Value: 4
-      - Key: {fileID: 11400000, guid: 831651d4309c6c841ac0980932278d03, type: 2}
-        Value: 6
       - Key: {fileID: 11400000, guid: 8c73a83bc739b2e4a96c1d00481f6a33, type: 2}
         Value: 50
+      - Key: {fileID: 11400000, guid: 831651d4309c6c841ac0980932278d03, type: 2}
+        Value: 10
+      - Key: {fileID: 11400000, guid: 6b57ffdf38013294fa8b9ceb3d9d9c98, type: 2}
+        Value: 10

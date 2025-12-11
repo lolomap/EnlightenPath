@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42e708d5e1ce4c119a96e6dd97b28f11, type: 3}
   m_Name: L-Room
   m_EditorClassIdentifier: Assembly-CSharp::RoomSO
-  Prefab: {fileID: 0}
+  Prefab: {fileID: -3859386528984610834, guid: 44d40700057606444ae6d6a610aa83c6, type: 3}
+  Preview: {fileID: 0}
   Connections: 0100000002000000
   Direction: 0
   SpawnedInside: []

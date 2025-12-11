@@ -5,6 +5,7 @@ using UnityEngine;
 using Utilities;
 using Zenject;
 
+[RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(LightSource))]
 public class Player : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class Player : MonoBehaviour
 	[Inject] private EventBus _eventBus;
 	[Inject] private MapManager _mapManager;
 	[Inject] private LightManager _lightManager;
+	[Inject] private GrandCandle _grandCandle;
 	
 	private void Awake()
 	{
@@ -73,6 +75,8 @@ public class Player : MonoBehaviour
 			default:
 				throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
 		}
+		
+		_eventBus.ToggleMovementUI.RaiseEvent(false);
 
 		if (_mapManager.GetRoomInPos(gridPos) != null)
 		{
@@ -80,10 +84,25 @@ public class Player : MonoBehaviour
 			return;
 		}
 		
-		_eventBus.MovedToDark.RaiseEvent(gridPos);
+		MoveToDark(gridPos);
 	}
 	public void RequestMove(int direction) => RequestMove((Direction)direction); // Inspector fix
 
+	private void MoveToDark(Vector2Int gridPos)
+	{
+		RoomSO nextRoom = _grandCandle.Pick(1, true)[0];
+
+		while (
+			!_mapManager.IsValidPlace(gridPos, nextRoom.Connections, _mapManager.ConnectingSourceGridPos) &&
+			nextRoom.Direction != Direction.Count
+			)
+			MapManager.RotateRoom(nextRoom, (Direction)((int)nextRoom.Direction + 1));
+		
+		_mapManager.PlaceRoom(nextRoom, gridPos);
+		
+		_eventBus.ForceMove.RaiseEvent(gridPos);
+	}
+	
 	private void MoveToGridPos(Vector2Int gridPos)
 	{
 		_targetPos = _mapManager.GridToWorld(gridPos);

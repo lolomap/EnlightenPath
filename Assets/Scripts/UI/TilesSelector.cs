@@ -17,6 +17,12 @@ namespace UI
         [Inject] private EventBus _eventBus;
         [Inject] private PreviewManager _previewManager;
 
+        private void OnValidate()
+        {
+            if (TilePrefab == null)
+                Debug.LogWarning("No prefab to spawn tile!");
+        }
+
         private void OnEnable()
         {
             _eventBus.RemoveSelectedTile.EventRaised += OnRemoveSelected;

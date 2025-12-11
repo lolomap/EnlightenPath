@@ -358,7 +358,7 @@ namespace EditorAttributes.Editor
 			}
 			else if (parameterType.IsEnum)
 			{
-				return isDBNull ? Enum.ToObject(parameterType, 0) as Enum : Enum.ToObject(parameterType, parameterValue) as Enum;
+				return isDBNull ? Enum.ToObject(parameterType, 0) as Enum : Enum.ToObject(parameterType, parameterValue ?? 0) as Enum;
 			}
 			else if (parameterType == typeof(Vector2))
 			{

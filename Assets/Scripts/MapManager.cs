@@ -4,6 +4,7 @@ using DI;
 using EditorAttributes;
 using Events;
 using Items;
+using Items.Data;
 using UnityEngine;
 using Utilities;
 using Zenject;
@@ -13,6 +14,7 @@ public class MapManager : MonoBehaviour
 {
 	public Vector3 MapCenter;
 	public Vector2 CellSize;
+	public Vector2Int StartRoomPos;
 	public RoomSO StartRoom;
 	public Room NoRoomPrefab;
 	
@@ -26,24 +28,21 @@ public class MapManager : MonoBehaviour
 	
 	[Inject] private EventBus _eventBus;
 	[Inject] private DungeonConfig _config;
-	[Inject] private GrandCandle _grandCandle;
 
 	private void Awake()
 	{
 		_grid = new(_config.Width, _config.Height);
-		StartPos = GridToWorld(WorldToGrid(MapCenter));
+		StartPos = GridToWorld(StartRoomPos);
 	}
 
 	private void OnEnable()
 	{
 		_eventBus.FogIsReady.EventRaised += Init;
-		_eventBus.MovedToDark.EventRaised += OnMovedToDark;
 	}
 	
 	private void OnDisable()
 	{
 		_eventBus.FogIsReady.EventRaised -= Init;
-		_eventBus.MovedToDark.EventRaised -= OnMovedToDark;
 	}
 
 	public RoomSO GetRoomInPos(Vector2Int position) => _grid.Get(position.x, position.y);
@@ -58,7 +57,7 @@ public class MapManager : MonoBehaviour
 		position.z += _grid.Height * CellSize.y / 2f;
 
 		if (position.x < 0) position.x -= CellSize.x;
-		if (position.z < 0) position.x -= CellSize.y;
+		if (position.z < 0) position.z -= CellSize.y;
 		
 		result.x = (int) (position.x / CellSize.x);
 		result.y = (int) (position.z / CellSize.y);
@@ -94,7 +93,7 @@ public class MapManager : MonoBehaviour
 			}
 		}
 
-		PlaceRoom(StartRoom, WorldToGrid(MapCenter), false);
+		PlaceRoom(StartRoom, StartRoomPos, false);
 		
 		_eventBus.MapIsReady.RaiseEvent();
 	}
@@ -117,6 +116,7 @@ public class MapManager : MonoBehaviour
 			).GetComponent<Room>();
 		
 		_roomObjects[gridPos] = roomObj;
+		
 		roomData.GridPos = gridPos;
 		
 		_grid.Replace(gridPos.x, gridPos.y, roomData);
@@ -187,21 +187,6 @@ public class MapManager : MonoBehaviour
 				_eventBus.LightSourceInstantiated.RaiseEvent(lightSource);
 			obj.OnSpawn();
 		}
-	}
-
-	//TODO: Move to Player
-	private void OnMovedToDark(Vector2Int gridPos)
-	{
-		RoomSO nextRoom = _grandCandle.Pick(1, true)[0];
-
-		while (
-			!_grid.IsValidPlace(gridPos, nextRoom.Connections, ConnectingSourceGridPos) && nextRoom.Direction != Direction.Count
-			)
-			RotateRoom(nextRoom, (Direction)((int)nextRoom.Direction + 1));
-		
-		PlaceRoom(nextRoom, gridPos);
-		
-		_eventBus.ForceMove.RaiseEvent(gridPos);
 	}
 	
 	#region INSPECTOR_TEST

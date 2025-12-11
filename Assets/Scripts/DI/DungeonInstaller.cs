@@ -1,9 +1,10 @@
 ﻿using Data;
 using UI;
+using Zenject;
 
 namespace DI
 {
-	public class DungeonInstaller  : BaseInstaller
+	public class DungeonInstaller  : MonoInstaller
 	{
 		public DungeonConfig DungeonConfig;
 		public MapManager MapManager;
@@ -15,8 +16,6 @@ namespace DI
 
 		public override void InstallBindings()
 		{
-			base.InstallBindings();
-			
 			Container.Bind<DungeonConfig>().FromScriptableObject(DungeonConfig).AsSingle();
 			Container.Bind<MapManager>().FromInstance(MapManager).AsSingle();
 			Container.Bind<LightManager>().FromInstance(LightManager).AsSingle();

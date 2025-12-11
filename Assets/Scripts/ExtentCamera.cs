@@ -5,7 +5,6 @@ public class ExtentCamera : MonoBehaviour
 {
     public enum Orientation
     {
-        
         Vertical,
         Horizontal,
         Corner
@@ -30,7 +29,7 @@ public class ExtentCamera : MonoBehaviour
         }
         
         _pivot = _mainCamera.transform.parent;
-        _mapSize = new(_mapManager.Width, _mapManager.Height);
+        _mapSize = new(_mapManager.Width, 0f, _mapManager.Height);
     }
 
     private void LateUpdate()
@@ -47,14 +46,14 @@ public class ExtentCamera : MonoBehaviour
                 offset.x = 0;
                 break;
             case Orientation.Horizontal:
-                offset.y = 0;
+                offset.z = 0;
                 break;
             case Orientation.Corner:
                 break;
         }
 
         if (mainCameraProjection.x > _mapManager.MapCenter.x) offset.x *= -1;
-        if (mainCameraProjection.z > _mapManager.MapCenter.z) offset.y *= -1;
+        if (mainCameraProjection.z > _mapManager.MapCenter.z) offset.z *= -1;
 
         Vector3 localOffset = _pivot.InverseTransformVector(offset);
         localOffset.z = transform.localPosition.z;

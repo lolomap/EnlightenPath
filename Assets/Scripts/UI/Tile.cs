@@ -1,16 +1,15 @@
-﻿using System;
-using Data;
-using DG.Tweening;
+﻿using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
+
 namespace UI
 {
     public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
         public Image Preview;
+        public Color HighlightColor;
         public float ShakeDuration;
         public float ShakeStrength;
         public float HoverScale;
@@ -18,17 +17,21 @@ namespace UI
         public RoomSO Content { get; private set; }
 
         private bool _isHighlighted;
+        private Color _baseColor;
+        private Tween _highlightTween;
         
         [Inject] private TilesSelector _tilesSelector;
 
         private void Awake()
         {
+            _baseColor = Preview.color;
             Preview.rectTransform.DOShakeAnchorPos(ShakeDuration, ShakeStrength).SetLoops(-1);
         }
 
         private void OnDestroy()
         {
             Preview.rectTransform.DOKill();
+            _highlightTween.Kill();
         }
 
         public void Init(RoomSO room)
@@ -40,7 +43,20 @@ namespace UI
         public void SetHighlighted(bool isHighlighted)
         {
             _isHighlighted = isHighlighted;
-            
+
+            if (_isHighlighted)
+            {
+                _highlightTween = DOTween.Sequence()
+                    .Append(Preview.DOColor(HighlightColor, ShakeDuration))
+                    .Append(Preview.DOColor(_baseColor, ShakeDuration))
+                    .SetLoops(-1)
+                    .Play();
+            }
+            else
+            {
+                _highlightTween.Kill(true);
+                Preview.color = _baseColor;
+            }
         }
 
         public void OnPointerClick(PointerEventData eventData)

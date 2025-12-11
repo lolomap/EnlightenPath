@@ -1,12 +1,9 @@
-﻿using UnityEngine;
+﻿using Items.Data;
+using UnityEngine;
 
 namespace Items
 {
-    public class KeySO : SpawnObjectSO
-    {
-        public Color Color;
-    }
-    
+    [RequireComponent(typeof(Pickable))]
     public class Key : MonoBehaviour, ISpawnObject, IHandSlot
     {
         private KeySO _data;
