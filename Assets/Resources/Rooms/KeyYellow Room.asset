@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42e708d5e1ce4c119a96e6dd97b28f11, type: 3}
-  m_Name: StartRoom
+  m_Name: KeyYellow Room
   m_EditorClassIdentifier: Assembly-CSharp::RoomSO
-  Prefab: {fileID: -3859386528984610834, guid: 44d40700057606444ae6d6a610aa83c6, type: 3}
-  Preview: {fileID: 21300000, guid: 6a7524b8337b1c24c9968fc13663d44c, type: 3}
-  Connections: 0200000001000000
+  Prefab: {fileID: -3859386528984610834, guid: 3b662e3664ec8fa41a6e1b300169195b, type: 3}
+  Preview: {fileID: 21300000, guid: 3cdefc79657860e4faab611dac76ccdf, type: 3}
+  Connections: 00000000010000000200000003000000
   Direction: 0
   SpawnedInside:
-  - {fileID: 11400000, guid: 60db35ddcb003f24db15ccdcbc34059f, type: 2}
+  - {fileID: 11400000, guid: 730b43b979b11e840b672af0cc55dfc6, type: 2}

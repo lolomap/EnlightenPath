@@ -3,9 +3,21 @@ using UnityEngine;
 
 namespace Items
 {
-    [RequireComponent(typeof(Pickable))]
     public class Key : MonoBehaviour, ISpawnObject, IHandSlot
     {
-        private KeySO _data;
+        public MeshRenderer Mesh;
+        public KeySO Data;
+
+        private void Awake()
+        {
+            Mesh.material = new(Mesh.material);
+        }
+
+        private void Start()
+        {
+            Mesh.material.color = Data.Color;
+        }
+
+        public void OnSpawn(SpawnObjectSO data) => Data = data as KeySO;
     }
 }

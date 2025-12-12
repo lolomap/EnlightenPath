@@ -453,14 +453,16 @@ MonoBehaviour:
       Value: {fileID: 8696752464017285447}
     - Key: 3
       Value: {fileID: 1160761281002353660}
-    - Key: 4
-      Value: {fileID: 3495726466044256503}
     - Key: 5
-      Value: {fileID: 1412720376055681143}
+      Value: {fileID: 3495726466044256503}
     - Key: 6
-      Value: {fileID: 7006719739625486215}
+      Value: {fileID: 1412720376055681143}
     - Key: 7
+      Value: {fileID: 7006719739625486215}
+    - Key: 8
       Value: {fileID: 2563470473991343625}
+    - Key: 4
+      Value: {fileID: 116973417386537220}
 --- !u!1 &2086129950888246510
 GameObject:
   m_ObjectHideFlags: 0

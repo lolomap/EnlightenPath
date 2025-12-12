@@ -18,5 +18,7 @@ namespace Events
         public readonly GenericEventChannel MapIsReady = new();
         public readonly GenericEventChannel<ISlot> ItemPicked = new();
         public readonly GenericEventChannel<ISlot> ItemDropped = new();
+
+        public readonly GenericEventChannel<Color> Unlocked = new();
     }
 }

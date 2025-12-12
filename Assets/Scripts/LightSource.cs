@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Zenject;
 
 public class LightSource : MonoBehaviour
@@ -7,10 +8,16 @@ public class LightSource : MonoBehaviour
     private Vector3 _lastPosition;
 
     [Inject] private MapManager _mapManager;
+    [Inject] private LightManager _lightManager;
 
     private void Awake()
     {
         _lastPosition = transform.position;
+    }
+
+    private void OnDestroy()
+    {
+        _lightManager.UnregisterLightSource(this);
     }
 
     public LightChangedContext UpdateLightPos()

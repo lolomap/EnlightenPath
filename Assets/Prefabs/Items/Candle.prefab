@@ -175,6 +175,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ad892e48cab458bbf96576950799fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Items.Candle
+  Flame:
+  - {fileID: 4002947760271452665}
+  - {fileID: 4682652937661246332}
+  - {fileID: 1603403292269669688}
+  - {fileID: 8842804117389408271}
+  Data: {fileID: 0}
 --- !u!114 &6385167981541155316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,6 +274,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 647038799667286879, guid: 41972016b1bdea3488dbf7dc020af529, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1203197604873904684, guid: 41972016b1bdea3488dbf7dc020af529, type: 3}
       propertyPath: m_Layer
       value: 9
@@ -308,6 +318,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 5026051156802519721, guid: 41972016b1bdea3488dbf7dc020af529, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9027892539884929288, guid: 41972016b1bdea3488dbf7dc020af529, type: 3}
       propertyPath: m_Layer
       value: 9
@@ -320,6 +334,16 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 8221691630102294594}
   m_SourcePrefab: {fileID: 100100000, guid: 41972016b1bdea3488dbf7dc020af529, type: 3}
+--- !u!1 &4002947760271452665 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5026051156802519721, guid: 41972016b1bdea3488dbf7dc020af529, type: 3}
+  m_PrefabInstance: {fileID: 8236324103721266000}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4682652937661246332 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3652820804543430700, guid: 41972016b1bdea3488dbf7dc020af529, type: 3}
+  m_PrefabInstance: {fileID: 8236324103721266000}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5961791593943190876 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2373895066498360844, guid: 41972016b1bdea3488dbf7dc020af529, type: 3}
@@ -349,5 +373,10 @@ BoxCollider:
 --- !u!4 &8588811371192412355 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 395431994005734291, guid: 41972016b1bdea3488dbf7dc020af529, type: 3}
+  m_PrefabInstance: {fileID: 8236324103721266000}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8842804117389408271 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 647038799667286879, guid: 41972016b1bdea3488dbf7dc020af529, type: 3}
   m_PrefabInstance: {fileID: 8236324103721266000}
   m_PrefabAsset: {fileID: 0}

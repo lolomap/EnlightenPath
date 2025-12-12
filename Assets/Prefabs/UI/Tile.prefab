@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.Tile
   Preview: {fileID: 3751621706959765355}
-  HighlightColor: {r: 1, g: 0.6748456, b: 0, a: 0}
+  HighlightColor: {r: 1, g: 0.6748456, b: 0, a: 1}
   ShakeDuration: 1
   ShakeStrength: 2.5
   HoverScale: 1.125

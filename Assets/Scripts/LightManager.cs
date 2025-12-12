@@ -41,7 +41,9 @@ public class LightManager : MonoBehaviour
     [Button]
     public void UpdateAllSources()
     {
-        List<LightChangedContext> changes = _lightSources.Select(lightSource => lightSource.UpdateLightPos()).ToList();
+        List<LightChangedContext> changes =
+            _lightSources.Where(lightSource => lightSource.enabled)
+                .Select(lightSource => lightSource.UpdateLightPos()).ToList();
 
         foreach (LightChangedContext context in changes)
             UpdateDark(context);
@@ -57,6 +59,11 @@ public class LightManager : MonoBehaviour
         _lightSources.Add(source);
         if (_isReady)
             source.UpdateLightPos();
+    }
+
+    public void UnregisterLightSource(LightSource source)
+    {
+        _lightSources.Remove(source);
     }
 
     private void UpdateDark(LightChangedContext context)

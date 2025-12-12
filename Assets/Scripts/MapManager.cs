@@ -203,7 +203,7 @@ public class MapManager : MonoBehaviour
 			LightSource lightSource = obj.GetComponent<LightSource>();
 			if (lightSource != null)
 				_eventBus.LightSourceInstantiated.RaiseEvent(lightSource);
-			obj.GetComponent<ISpawnObject>().OnSpawn();
+			obj.GetComponent<ISpawnObject>().OnSpawn(Instantiate(spawnable));
 		}
 	}
 	

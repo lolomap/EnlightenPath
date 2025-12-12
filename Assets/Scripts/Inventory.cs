@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Events;
 using UnityEngine;
@@ -38,6 +37,11 @@ public class Inventory : MonoBehaviour
     {
         _eventBus.ItemPicked.EventRaised -= OnPicked;
         _eventBus.ItemDropped.EventRaised -= OnDropped;
+    }
+
+    public List<ISlot> GetItems<T>() where T : ISlot
+    {
+        return AllSlots.Where(slot => slot is T).ToList();
     }
 
     public IEnumerable<LightSource> GetLightSources()

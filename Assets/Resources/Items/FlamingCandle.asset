@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 586ec58b72cb425b90e55b175ee6ba1a, type: 3}
-  m_Name: Candle
+  m_Name: FlamingCandle
   m_EditorClassIdentifier: Assembly-CSharp::Items.Data.CandleSO
   Prefab: {fileID: 6887863591928836827, guid: 560e7f9614460fe43a298eb4516ee268, type: 3}
   SpawnChance: 1
   PossibleLocations: 01000000000000000600000007000000
-  IsFlaming: 0
+  IsFlaming: 1

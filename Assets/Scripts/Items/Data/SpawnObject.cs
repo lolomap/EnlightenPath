@@ -10,6 +10,7 @@ namespace Items.Data
 		UpRightCorner,
 		DownLeftCorner,
 		DownRightCorner,
+		Center,
 		
 		DownWall,
 		LeftWall,
@@ -19,7 +20,7 @@ namespace Items.Data
 		Count
 	}
 	
-	[CreateAssetMenu(fileName = "Item", menuName = "Game/Item")]
+	[CreateAssetMenu(fileName = "Item", menuName = "Game/Item/Item")]
 	public class SpawnObjectSO : ScriptableObject
 	{
 		public GameObject Prefab;
@@ -41,6 +42,6 @@ namespace Items.Data
 
 	public interface ISpawnObject
 	{
-		public void OnSpawn() {}
+		public void OnSpawn(SpawnObjectSO data) {}
 	}
 }
