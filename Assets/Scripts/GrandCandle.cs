@@ -15,8 +15,17 @@ public class GrandCandleConfig
 [RequireComponent(typeof(GrandCandleVisual))]
 public class GrandCandle : MonoBehaviour
 {
+	public enum Origin
+	{
+		Top,
+		Bottom,
+		Random
+	}
+	
 	private readonly List<RoomSO> _rooms = new();
 	private GrandCandleVisual _ui;
+
+	public event Action Underflow;
 	
 	[Inject] private DungeonConfig _config;
 	[Inject] private TilesSelector _tilesSelector;
@@ -37,7 +46,13 @@ public class GrandCandle : MonoBehaviour
 
 	public List<RoomSO> Pick(int count, bool destroy = false)
 	{
-		List<RoomSO> removed = Pop(count, true);
+		if (count > _rooms.Count)
+		{
+			count = _rooms.Count;
+			Underflow?.Invoke();
+		}
+		
+		List<RoomSO> removed = Pop(count);
 		_ui.UpdateHeight(_rooms.Count);
 			
 		if (!destroy && _tilesSelector != null)
@@ -45,17 +60,29 @@ public class GrandCandle : MonoBehaviour
 
 		return removed;
 	}
-	
-	private List<RoomSO> Pop(int count, bool remove)
+
+	public void Push(RoomSO room, Origin origin)
 	{
-		if (count > _rooms.Count) count = _rooms.Count;
-		if (count <= 0) return new();
-		
-		List<RoomSO> result = _rooms.GetRange(_rooms.Count - count, count);
-		
-		if (remove)
-			_rooms.RemoveRange(_rooms.Count - count, count);
-				
+		int position = origin switch
+		{
+			Origin.Top => _rooms.Count,
+			Origin.Bottom => 0,
+			Origin.Random => 0, //TODO
+			_ => 0
+		};
+		_rooms.Insert(position, room);
+	}
+
+	//TODO: Origin argument
+	private List<RoomSO> Pop(int count)
+	{
+		List<RoomSO> result = Get(count);
+		_rooms.RemoveRange(_rooms.Count - count, count);
 		return result;
+	}
+	
+	private List<RoomSO> Get(int count)
+	{
+		return count <= 0 ? new() : _rooms.GetRange(_rooms.Count - count, count);
 	}
 }

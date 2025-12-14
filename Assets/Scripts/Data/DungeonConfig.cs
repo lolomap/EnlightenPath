@@ -9,6 +9,9 @@ namespace Data
 		public int Width;
 		public int Height;
 
+		public int LockTypesToOpen;
+		public RoomSO TileToUnlock;
+
 		public GrandCandleConfig GrandCandle;
 	}
 }

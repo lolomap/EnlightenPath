@@ -1,5 +1,5 @@
 ﻿using AYellowpaper.SerializedCollections;
-using Events;
+using FischlWorks_FogWar;
 using Items.Data;
 using UnityEngine;
 using Zenject;
@@ -7,12 +7,12 @@ using Zenject;
 public class Room : MonoBehaviour
 {
     public SerializedDictionary<SpawnLocation, Transform> SpawnPivots;
-    
-    [Inject] private EventBus _eventBus;
+
+    [Inject] private csFogWar _fogWar;
 
     private void OnDestroy()
     {
-        if (gameObject.scene.isLoaded && _eventBus != null)
-            _eventBus.FogObstaclesDirty.RaiseEvent();
+        if (gameObject.scene.isLoaded && _fogWar != null)
+            _fogWar.MarkObstaclesDirty();
     }
 }

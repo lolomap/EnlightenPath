@@ -279,24 +279,9 @@ namespace FischlWorks_FogWar
 
         private const string levelScanDataPath = "/LevelData";
 
-        [Inject] private EventBus _eventBus;
+        public event Action FogIsReady;
 
         // --- --- ---
-
-        private void OnEnable()
-        {
-            _eventBus.FogObstaclesDirty.EventRaised += OnObstaclesDirty;
-        }
-
-        private void OnDestroy()
-        {
-            _eventBus.FogObstaclesDirty.EventRaised -= OnObstaclesDirty;
-        }
-
-        private void OnDisable()
-        {
-            _eventBus.FogObstaclesDirty.EventRaised -= OnObstaclesDirty;
-        }
 
         private void Start()
         {
@@ -329,10 +314,10 @@ namespace FischlWorks_FogWar
             // This is needed because we do not update the fog when there's no unit-scale movement of each fogRevealer
             ForceUpdateFog();
             
-            _eventBus.FogIsReady.RaiseEvent();
+            FogIsReady?.Invoke();
         }
 
-        private void OnObstaclesDirty()
+        public void MarkObstaclesDirty()
         {
             ScanLevel();
             ForceUpdateFog();

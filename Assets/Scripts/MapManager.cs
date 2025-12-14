@@ -3,6 +3,7 @@ using Data;
 using DI;
 using EditorAttributes;
 using Events;
+using FischlWorks_FogWar;
 using Items.Data;
 using UnityEngine;
 using Utilities;
@@ -27,6 +28,7 @@ public class MapManager : MonoBehaviour
 	
 	[Inject] private EventBus _eventBus;
 	[Inject] private DungeonConfig _config;
+	[Inject] private csFogWar _fogWar;
 
 	private void Awake()
 	{
@@ -36,12 +38,12 @@ public class MapManager : MonoBehaviour
 
 	private void OnEnable()
 	{
-		_eventBus.FogIsReady.EventRaised += Init;
+		_fogWar.FogIsReady += Init;
 	}
 	
 	private void OnDisable()
 	{
-		_eventBus.FogIsReady.EventRaised -= Init;
+		_fogWar.FogIsReady -= Init;
 	}
 
 	public RoomSO GetRoomInPos(Vector2Int position) => _grid.Get(position.x, position.y);
@@ -134,7 +136,7 @@ public class MapManager : MonoBehaviour
 		SpawnRoomObjects(gridPos, roomConfig);
 		
 		if (updateFog)
-			_eventBus.FogObstaclesDirty.RaiseEvent();
+			_fogWar.MarkObstaclesDirty();
 	}
 
 	public void EraseRoom(Vector2Int gridPos, bool updateFog = true)
@@ -157,7 +159,7 @@ public class MapManager : MonoBehaviour
 			_roomObjects[gridPos] = roomObj;
 
 			if (updateFog)
-				_eventBus.FogObstaclesDirty.RaiseEvent();
+				_fogWar.MarkObstaclesDirty();
 		}
 	}
 	

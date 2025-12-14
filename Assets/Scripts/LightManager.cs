@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EditorAttributes;
 using Events;
+using FischlWorks_FogWar;
 using UnityEngine;
 using Utilities;
 using Zenject;
@@ -24,6 +25,7 @@ public class LightManager : MonoBehaviour
 
     [Inject] private EventBus _eventBus;
     [Inject] private MapManager _mapManager;
+    [Inject] private csFogWar _fogWar;
     [Inject] private GrandCandle _grandCandle;
 
     private void OnEnable()
@@ -110,7 +112,7 @@ public class LightManager : MonoBehaviour
             _lightedRooms.Remove(gridPos);
         }
 		
-        _eventBus.FogObstaclesDirty.RaiseEvent();
+        _fogWar.MarkObstaclesDirty();
 
         if (WaitingForLightRooms.Count > 0)
             _grandCandle.Pick(WaitingForLightRooms.Count);

@@ -1,4 +1,5 @@
 ﻿using Data;
+using FischlWorks_FogWar;
 using UI;
 using Zenject;
 
@@ -6,8 +7,10 @@ namespace DI
 {
 	public class DungeonInstaller  : MonoInstaller
 	{
+		//TODO: make systems normal class, not MO
 		public DungeonConfig DungeonConfig;
 		public MapManager MapManager;
+		public csFogWar FogWar;
 		public LightManager LightManager;
 		public TilesSelector TilesSelector;
 		public PreviewManager PreviewManager;
@@ -17,7 +20,10 @@ namespace DI
 		public override void InstallBindings()
 		{
 			Container.Bind<DungeonConfig>().FromScriptableObject(DungeonConfig).AsSingle();
+			Container.Bind<DungeonState>().AsSingle();
+			
 			Container.Bind<MapManager>().FromInstance(MapManager).AsSingle();
+			Container.Bind<csFogWar>().FromInstance(FogWar).AsSingle();
 			Container.Bind<LightManager>().FromInstance(LightManager).AsSingle();
 			Container.Bind<TilesSelector>().FromInstance(TilesSelector).AsSingle();
 			Container.Bind<PreviewManager>().FromInstance(PreviewManager).AsSingle();

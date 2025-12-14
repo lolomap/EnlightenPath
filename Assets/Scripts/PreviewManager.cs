@@ -1,4 +1,5 @@
 ﻿using Events;
+using FischlWorks_FogWar;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Utilities;
@@ -22,6 +23,7 @@ public class PreviewManager : MonoBehaviour
 
     [Inject] private EventBus _eventBus;
     [Inject] private MapManager _mapManager;
+    [Inject] private csFogWar _fogWar;
     [Inject] private LightManager _lightManager;
 
     private void Update()
@@ -109,7 +111,7 @@ public class PreviewManager : MonoBehaviour
         _cachedRoomObject = _mapManager.GetRoomObjectInPos(gridPosLooped);
         if (_cachedRoomObject != null)
             GameObjectManipulator.ToggleCollision(_cachedRoomObject.gameObject, false);
-        _eventBus.FogObstaclesDirty.RaiseEvent();
+        _fogWar.MarkObstaclesDirty();
     }
     
     public void OnCancel(InputAction.CallbackContext context)
