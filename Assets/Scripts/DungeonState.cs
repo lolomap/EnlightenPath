@@ -18,6 +18,7 @@ public class DungeonState : IInitializable, IDisposable
     public void Initialize()
     {
         _eventBus.Unlocked.EventRaised += OnUnlocked;
+        _eventBus.Win.EventRaised += Win;
         _eventBus.Lose.EventRaised += Lose;
         _grandCandle.Underflow += Lose;
     }
@@ -25,6 +26,7 @@ public class DungeonState : IInitializable, IDisposable
     public void Dispose()
     {
         _eventBus.Unlocked.EventRaised -= OnUnlocked;
+        _eventBus.Win.EventRaised -= Win;
         _eventBus.Lose.EventRaised -= Lose;
         _grandCandle.Underflow -= Lose;
     }
@@ -32,11 +34,13 @@ public class DungeonState : IInitializable, IDisposable
     private void Win()
     {
         Debug.LogWarning("WIN!");
+        Time.timeScale = 0;
     }
     
     private void Lose()
     {
         Debug.LogWarning("LOSE!");
+        Time.timeScale = 0;
     }
 
     private void OnUnlocked(Color color)

@@ -411,7 +411,7 @@ GameObject:
   - component: {fileID: 803127429577158285}
   - component: {fileID: -3859386528984610834}
   m_Layer: 0
-  m_Name: X-room
+  m_Name: Gate Room
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2499,7 +2499,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7513126877171392110}
-  - component: {fileID: 2931146702314215164}
+  - component: {fileID: 8948934477962114163}
   - component: {fileID: 7513585387678871954}
   - component: {fileID: 105492695874464162}
   - component: {fileID: 220397185849492800}
@@ -2525,7 +2525,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 803127429577158285}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2931146702314215164
+--- !u!114 &8948934477962114163
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2534,9 +2534,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8072235726285034448}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4ddfd4d4fb746babbca8715ba6b612c, type: 3}
+  m_Script: {fileID: 11500000, guid: b6ab99db76b24b5aa083fd282fbc255d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Pit
+  m_EditorClassIdentifier: Assembly-CSharp::Gate
 --- !u!33 &7513585387678871954
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2570,7 +2570,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d1a5903867c8f0a4a8a94c3fe36dad11, type: 2}
+  - {fileID: 2100000, guid: 0f29e3c1c576f6641b9e474f6b194480, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

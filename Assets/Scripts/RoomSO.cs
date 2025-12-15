@@ -11,6 +11,7 @@ public class RoomSO : ScriptableObject
     public Sprite Preview;
     public List<Direction> Connections = new() { Direction.Down };
     public Direction Direction;
+    public bool IsPit;
     public List<SpawnObjectSO> SpawnedInside;
     
     public Vector2Int GridPos { get; set; }

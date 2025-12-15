@@ -4,6 +4,7 @@ using Events;
 using UnityEngine;
 using Utilities;
 using Zenject;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(LightSource))]
@@ -11,6 +12,7 @@ public class Player : MonoBehaviour
 {
 	public float Speed;
 	public float StopDistance;
+	public float Gravity;
 
 	private bool _isMoving;
 	private Vector3 _direction;
@@ -89,7 +91,14 @@ public class Player : MonoBehaviour
 	}
 	public void RequestMove(int direction) => RequestMove((Direction)direction); // Inspector fix
 
-	private void MoveToDark(Vector2Int gridPos)
+	public void FallToDark()
+	{
+		Vector2Int randPos = new(Random.Range(0, 6), Random.Range(0, 6)); //TODO: Deterministic Random and original fall rules
+		if (_mapManager.GetRoomInPos(randPos) != null) {FallToDark(); return;}
+		MoveToDark(randPos, true);
+	}
+
+	private void MoveToDark(Vector2Int gridPos, bool teleport = false)
 	{
 		RoomSO nextRoom = _grandCandle.Pick(1, true)[0];
 
@@ -101,7 +110,10 @@ public class Player : MonoBehaviour
 		
 		_mapManager.PlaceRoom(nextRoom, gridPos);
 		
-		_eventBus.ForceMove.RaiseEvent(gridPos);
+		//_eventBus.ForceMove.RaiseEvent(gridPos);
+		MoveToGridPos(gridPos);
+		if (teleport)
+			TeleportToGridPos(gridPos);
 	}
 	
 	private void MoveToGridPos(Vector2Int gridPos)
@@ -119,11 +131,7 @@ public class Player : MonoBehaviour
 			
 		if (distanceToTarget <= StopDistance)
 		{
-			_isMoving = false;
-			_currentGridPos = _mapManager.WorldToGrid(transform.position);
-			_mapManager.ConnectingSourceGridPos = _currentGridPos;
-			
-			_turnSequenceManager.Turn();
+			OnFinishMove();
 			
 			return;
 		}
@@ -152,7 +160,12 @@ public class Player : MonoBehaviour
 			_controller.enabled = true;
 		}
 		else
-			_controller.Move(_direction * (distanceToTarget <= Speed ? StopDistance * Time.deltaTime : Speed * Time.deltaTime));
+		{
+			Vector3 velocity = _direction * ((distanceToTarget <= Speed ? StopDistance : Speed) * Time.deltaTime);
+			if (!_controller.isGrounded)
+				velocity += Vector3.down * (Gravity * Time.deltaTime);
+			_controller.Move(velocity);
+		}
 	}
 
 	private void TeleportToGridPos(Vector2Int pos)
@@ -162,4 +175,13 @@ public class Player : MonoBehaviour
 		_controller.enabled = true;
 	}
 	[Button] public void TeleportToGridPos(int x, int y) => TeleportToGridPos(new(x, y));
+
+	private void OnFinishMove()
+	{
+		_isMoving = false;
+		_currentGridPos = _mapManager.WorldToGrid(transform.position);
+		_mapManager.ConnectingSourceGridPos = _currentGridPos;
+			
+		_turnSequenceManager.Turn();
+	}
 }

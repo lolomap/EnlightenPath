@@ -134,7 +134,10 @@ public class MapManager : MonoBehaviour
 		
 		_grid.Replace(gridPos.x, gridPos.y, roomData);
 		
-		SpawnRoomObjects(gridPos, roomConfig);
+		if (roomData.IsPit)
+			roomObj.BreakGround();
+		else
+			SpawnRoomObjects(gridPos, roomConfig);
 		
 		if (updateFog)
 			_fogWar.MarkObstaclesDirty();

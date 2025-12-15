@@ -10,7 +10,6 @@ namespace Events
         
         public readonly GenericEventChannel<bool> ToggleMovementUI = new();
         public readonly GenericEventChannel<Vector2Int> ForceMove = new();
-        //public readonly GenericEventChannel FinishedMove = new();
 
         public readonly GenericEventChannel RemoveSelectedTile = new();
 

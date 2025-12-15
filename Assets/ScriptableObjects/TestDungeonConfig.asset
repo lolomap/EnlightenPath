@@ -15,7 +15,7 @@ MonoBehaviour:
   Width: 6
   Height: 6
   LockTypesToOpen: 0
-  TileToUnlock: {fileID: 0}
+  TileToUnlock: {fileID: 11400000, guid: c623e5f7bdf18274298c381f385b75a0, type: 2}
   GrandCandle:
     Rooms:
       _serializedList:
@@ -33,7 +33,9 @@ MonoBehaviour:
         Value: 1
       - Key: {fileID: 11400000, guid: 6b57ffdf38013294fa8b9ceb3d9d9c98, type: 2}
         Value: 10
-      - Key: {fileID: 11400000, guid: bf092bcb96368314f9fb7a636ba0a05c, type: 2}
-        Value: 3
       - Key: {fileID: 11400000, guid: 21bcf785aad5ad646b6e12166ce5f056, type: 2}
         Value: 1
+      - Key: {fileID: 11400000, guid: bf092bcb96368314f9fb7a636ba0a05c, type: 2}
+        Value: 3
+      - Key: {fileID: 11400000, guid: 398b5cbb59f348749aefe85a762e1c2d, type: 2}
+        Value: 2

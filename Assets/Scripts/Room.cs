@@ -4,14 +4,16 @@ using Events;
 using FischlWorks_FogWar;
 using Spawnables.Data;
 using UnityEngine;
+using Utilities;
 using Zenject;
 
 public class Room : MonoBehaviour
 {
+    public LayerMask GroundLayer;
     public SerializedDictionary<SpawnLocation, Transform> SpawnPivots;
 
     public readonly List<SlotItem> Placed = new();
-
+    
     private Vector2Int _gridPos;
 
     [Inject] private EventBus _eventBus;
@@ -42,6 +44,14 @@ public class Room : MonoBehaviour
     {
         if (gameObject.scene.isLoaded && _fogWar != null)
             _fogWar.MarkObstaclesDirty();
+    }
+
+    public void BreakGround()
+    {
+        foreach (GameObject groundObj in GameObjectManipulator.FilterByLayer(gameObject, GroundLayer))
+        {
+            groundObj.SetActive(false);
+        }
     }
 
     private void OnPicked(SlotItem item)

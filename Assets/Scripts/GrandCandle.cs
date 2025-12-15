@@ -5,6 +5,7 @@ using Data;
 using UI;
 using UnityEngine;
 using Zenject;
+using Random = UnityEngine.Random;
 
 [Serializable]
 public class GrandCandleConfig
@@ -67,7 +68,7 @@ public class GrandCandle : MonoBehaviour
 		{
 			Origin.Top => _rooms.Count,
 			Origin.Bottom => 0,
-			Origin.Random => 0, //TODO
+			Origin.Random => Random.Range(0, _rooms.Count + 1), //TODO: Deterministic Random
 			_ => 0
 		};
 		_rooms.Insert(position, room);

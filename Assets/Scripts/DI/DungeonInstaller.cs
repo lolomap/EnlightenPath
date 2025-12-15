@@ -7,7 +7,7 @@ namespace DI
 {
 	public class DungeonInstaller  : MonoInstaller
 	{
-		//TODO: make systems normal class, not MO
+		//TODO: make systems normal class, not MB
 		public DungeonConfig DungeonConfig;
 		public MapManager MapManager;
 		public csFogWar FogWar;
@@ -21,7 +21,7 @@ namespace DI
 		public override void InstallBindings()
 		{
 			Container.Bind<DungeonConfig>().FromScriptableObject(DungeonConfig).AsSingle();
-			Container.Bind<DungeonState>().AsSingle();
+			Container.BindInterfacesAndSelfTo<DungeonState>().AsSingle();
 			
 			Container.Bind<MapManager>().FromInstance(MapManager).AsSingle();
 			Container.Bind<csFogWar>().FromInstance(FogWar).AsSingle();

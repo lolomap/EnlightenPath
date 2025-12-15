@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 namespace Utilities
 {
     public static class GameObjectManipulator
@@ -26,6 +27,20 @@ namespace Utilities
             {
                 previewCollider.enabled = enabled;
             }
+        }
+
+        public static List<GameObject> FilterByLayer(GameObject target, LayerMask layer)
+        {
+            List<GameObject> result = new();
+
+            if ((layer.value & 1 << target.layer) != 0)
+                result.Add(target);
+            foreach (Transform child in target.transform)
+            {
+                result.AddRange(FilterByLayer(child.gameObject, layer));
+            }
+            
+            return result;
         }
     }
 }
