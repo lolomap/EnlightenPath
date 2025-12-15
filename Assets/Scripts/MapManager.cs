@@ -4,7 +4,7 @@ using DI;
 using EditorAttributes;
 using Events;
 using FischlWorks_FogWar;
-using Items.Data;
+using Spawnables.Data;
 using UnityEngine;
 using Utilities;
 using Zenject;
@@ -20,6 +20,7 @@ public class MapManager : MonoBehaviour
 	
 	private GridMap _grid;
 	private readonly Dictionary<Vector2Int, Room> _roomObjects = new();
+	public readonly List<IMonsterTrigger> Monsters = new();
 
 	public float Width => _grid.Width * CellSize.x;
 	public float Height => _grid.Height * CellSize.y;
@@ -202,9 +203,15 @@ public class MapManager : MonoBehaviour
 			if (pivot == null) return;
 			
 			GameObject obj = DIGlobal.Instantiate(spawnable.Prefab, pivot);
+			//TODO: bool HasComponent(out component)
 			LightSource lightSource = obj.GetComponent<LightSource>();
+			SlotItem slotItem = obj.GetComponent<SlotItem>();
+			
 			if (lightSource != null)
 				_eventBus.LightSourceInstantiated.RaiseEvent(lightSource);
+			if (slotItem != null)
+				roomObject.Placed.Add(slotItem);
+			
 			obj.GetComponent<ISpawnObject>().OnSpawn(Instantiate(spawnable));
 		}
 	}

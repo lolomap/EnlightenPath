@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
-
-namespace Items.Data
+namespace Spawnables.Data
 {
     [CreateAssetMenu(fileName = "Candle", menuName = "Game/Item/Candle", order = 0)]
     public class CandleSO : SpawnObjectSO

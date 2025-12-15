@@ -1,9 +1,8 @@
-﻿using Items.Data;
+﻿using Spawnables.Data;
 using UnityEngine;
-
-namespace Items
+namespace Spawnables
 {
-    public class Key : MonoBehaviour, ISpawnObject, IHandSlot
+    public class Key : HandSlotItem, ISpawnObject 
     {
         public MeshRenderer Mesh;
         public KeySO Data;

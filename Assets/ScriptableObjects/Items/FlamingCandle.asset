@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Items.Data.CandleSO
   Prefab: {fileID: 6887863591928836827, guid: 560e7f9614460fe43a298eb4516ee268, type: 3}
   SpawnChance: 1
-  PossibleLocations: 01000000000000000600000007000000
+  PossibleLocations: 010000000800000007000000
   IsFlaming: 1

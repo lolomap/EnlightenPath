@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Items.Data;
+using Spawnables.Data;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Utilities;

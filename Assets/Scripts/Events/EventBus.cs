@@ -10,12 +10,13 @@ namespace Events
         
         public readonly GenericEventChannel<bool> ToggleMovementUI = new();
         public readonly GenericEventChannel<Vector2Int> ForceMove = new();
+        //public readonly GenericEventChannel FinishedMove = new();
 
         public readonly GenericEventChannel RemoveSelectedTile = new();
 
         public readonly GenericEventChannel MapIsReady = new();
-        public readonly GenericEventChannel<ISlot> ItemPicked = new();
-        public readonly GenericEventChannel<ISlot> ItemDropped = new();
+        public readonly GenericEventChannel<SlotItem> ItemPicked = new();
+        public readonly GenericEventChannel<SlotItem> ItemDropped = new();
 
         public readonly GenericEventChannel<Color> Unlocked = new();
         public readonly GenericEventChannel Win = new();

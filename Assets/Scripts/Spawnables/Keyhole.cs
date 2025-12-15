@@ -1,10 +1,9 @@
-﻿using System;
-using DG.Tweening;
+﻿using DG.Tweening;
 using Events;
-using Items.Data;
+using Spawnables.Data;
 using UnityEngine;
 using Zenject;
-namespace Items
+namespace Spawnables
 {
     public class Keyhole : MonoBehaviour, ISpawnObject
     {
@@ -35,10 +34,10 @@ namespace Items
             Mesh.material.color = Data.Color;
         }
         
-        private void OnItemDropped(ISlot item)
+        private void OnItemDropped(SlotItem item)
         {
             if (_mapManager.ConnectingSourceGridPos != _mapManager.WorldToGrid(transform.position, true)) return;
-            Key key = ((MonoBehaviour)item).GetComponent<Key>();
+            Key key = item.GetComponent<Key>();
             if (key == null) return;
             if (key.Data.Color != Data.Color) return;
             

@@ -16,6 +16,7 @@ namespace DI
 		public PreviewManager PreviewManager;
 		public GrandCandle GrandCandle;
 		public Inventory Inventory;
+		public TurnSequenceManager TurnSequenceManager;
 
 		public override void InstallBindings()
 		{
@@ -29,6 +30,8 @@ namespace DI
 			Container.Bind<PreviewManager>().FromInstance(PreviewManager).AsSingle();
 			Container.Bind<GrandCandle>().FromInstance(GrandCandle).AsSingle();
 			Container.Bind<Inventory>().FromInstance(Inventory).AsSingle();
+
+			Container.Bind<TurnSequenceManager>().FromScriptableObject(TurnSequenceManager).AsSingle();
 		}
 	}
 }

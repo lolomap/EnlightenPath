@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Data;
 using EditorAttributes;
 using Events;
 using FischlWorks_FogWar;
@@ -10,9 +11,11 @@ using Zenject;
 
 public struct LightChangedContext
 {
-    public Vector2Int Last;
-    public Vector2Int Present;
+    public Vector2Int LastPos;
+    public Vector2Int PresentPos;
     public int Intensity;
+    public bool LastFlaming;
+    public bool PresentFlaming;
 }
 
 public class LightManager : MonoBehaviour
@@ -24,6 +27,7 @@ public class LightManager : MonoBehaviour
     public HashSet<Vector2Int> WaitingForLightRooms { get; } = new();
 
     [Inject] private EventBus _eventBus;
+    [Inject] private DungeonConfig _config;
     [Inject] private MapManager _mapManager;
     [Inject] private csFogWar _fogWar;
     [Inject] private GrandCandle _grandCandle;
@@ -43,14 +47,22 @@ public class LightManager : MonoBehaviour
     [Button]
     public void UpdateAllSources()
     {
-        List<LightChangedContext> changes =
-            _lightSources.Where(lightSource => lightSource.enabled)
-                .Select(lightSource => lightSource.UpdateLightPos()).ToList();
+        List<LightChangedContext> commonChanges = _lightSources
+            .Where(lightSource => lightSource.enabled)
+            .Select(lightSource => lightSource.UpdateLightPos()).ToList();
+        
+        List<LightChangedContext> extinguishedChanges = _lightSources
+            .Where(lightSource => !lightSource.enabled)
+            .Select(lightSource => lightSource.UpdateLightPos())
+            .Where(context => context.LastFlaming).ToList();
 
-        foreach (LightChangedContext context in changes)
+        foreach (LightChangedContext context in commonChanges)
+            UpdateDark(context);
+
+        foreach (LightChangedContext context in extinguishedChanges)
             UpdateDark(context);
         
-        foreach (LightChangedContext context in changes)
+        foreach (LightChangedContext context in commonChanges)
             UpdateLight(context);
 
         ApplyLightEffect();
@@ -70,19 +82,24 @@ public class LightManager : MonoBehaviour
 
     private void UpdateDark(LightChangedContext context)
     {
-        LightCast(context.Last, context.Intensity, (gridPos) =>
+        LightCast(context.LastPos, context.Intensity, (gridPos) =>
         {
-            if (_lightedRooms.ContainsKey(gridPos)) _lightedRooms[gridPos]--;
+            if (_lightedRooms.ContainsKey(gridPos))
+            {
+                _lightedRooms[gridPos]--;
+                if (_lightedRooms[gridPos] < 0) // Darkness cannot overlap
+                    _lightedRooms[gridPos] = 0;
+            }
         });
     }
 
     private void UpdateLight(LightChangedContext context)
     {
-        LightCast(context.Present, context.Intensity, (gridPos) =>
+        LightCast(context.PresentPos, context.Intensity, (gridPos) =>
         {
             if (_lightedRooms.TryAdd(gridPos, 1))
             {
-                if (gridPos != context.Present)
+                if (gridPos != context.PresentPos)
                     WaitingForLightRooms.Add(gridPos);
             }
             else _lightedRooms[gridPos]++;
@@ -120,20 +137,27 @@ public class LightManager : MonoBehaviour
             _eventBus.ToggleMovementUI.RaiseEvent(true);
     }
     
-    private void LightCast(Vector2Int lightPos, int intensity, Action<Vector2Int> callback)
+    public void LightCast(Vector2Int lightPos, int intensity, Action<Vector2Int> callback, Func<RoomSO, bool> stopDirectionCondition = null)
     {
+        stopDirectionCondition ??= _ => false;
+
         callback(_mapManager.GridLoop(lightPos));
 
         bool downBlocked = false, leftBlocked = false, upBlocked = false, rightBlocked = false;
-        for (int i = 1; i <= intensity; i++)
+        int maxIntensity = Math.Min(intensity + 1, Math.Min(_config.Width, _config.Height)); // Light ray cannot overlap self
+        for (int i = 1; i < maxIntensity; i++)
         {
-            if (!_mapManager.GetRoomInPos(lightPos + Vector2Int.down * (i - 1)).Connections.Contains(Direction.Down))
+            RoomSO downRoom = _mapManager.GetRoomInPos(lightPos + Vector2Int.down * (i - 1));
+            if (stopDirectionCondition(downRoom) || downRoom != null && !downRoom.Connections.Contains(Direction.Down))
                 downBlocked = true;
-            if (!_mapManager.GetRoomInPos(lightPos + Vector2Int.left * (i - 1)).Connections.Contains(Direction.Left))
+            RoomSO leftRoom = _mapManager.GetRoomInPos(lightPos + Vector2Int.left * (i - 1));
+            if (stopDirectionCondition(leftRoom) || leftRoom != null && !leftRoom.Connections.Contains(Direction.Left))
                 leftBlocked = true;
-            if (!_mapManager.GetRoomInPos(lightPos + Vector2Int.right * (i - 1)).Connections.Contains(Direction.Right))
+            RoomSO upRoom = _mapManager.GetRoomInPos(lightPos + Vector2Int.right * (i - 1));
+            if (stopDirectionCondition(upRoom) || upRoom != null && !upRoom.Connections.Contains(Direction.Right))
                 rightBlocked = true;
-            if (!_mapManager.GetRoomInPos(lightPos + Vector2Int.up * (i - 1)).Connections.Contains(Direction.Up))
+            RoomSO rightRoom = _mapManager.GetRoomInPos(lightPos + Vector2Int.up * (i - 1));
+            if (stopDirectionCondition(rightRoom) || rightRoom != null && !rightRoom.Connections.Contains(Direction.Up))
                 upBlocked = true;
 			
             if (!downBlocked)

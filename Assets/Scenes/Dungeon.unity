@@ -1309,11 +1309,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DI.DungeonInstaller
   DungeonConfig: {fileID: 11400000, guid: 66c89a8b044a64140b7252d9236cfb6c, type: 2}
   MapManager: {fileID: 504605340}
+  FogWar: {fileID: 837629392}
   LightManager: {fileID: 1373447806}
   TilesSelector: {fileID: 978642337}
   PreviewManager: {fileID: 1899584570}
   GrandCandle: {fileID: 2093649055}
   Inventory: {fileID: 1250933271}
+  TurnSequenceManager: {fileID: 11400000, guid: 2bb3c63681c88ff4b88c50efd396f8d1, type: 2}
 --- !u!4 &535076245
 Transform:
   m_ObjectHideFlags: 0

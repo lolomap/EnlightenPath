@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
 
-[RequireComponent(typeof(ISlot))]
+[RequireComponent(typeof(SlotItem))]
 public class Pickable : MonoBehaviour, IPointerClickHandler
 {
     private bool _isPicked;
@@ -17,7 +17,7 @@ public class Pickable : MonoBehaviour, IPointerClickHandler
         if (_mapManager.ConnectingSourceGridPos != _mapManager.WorldToGrid(transform.position, true)) return;
 
         _isPicked = true;
-        _eventBus.ItemPicked.RaiseEvent(GetComponent<ISlot>());
+        _eventBus.ItemPicked.RaiseEvent(GetComponent<SlotItem>());
     }
 
     private void Drop()
@@ -27,6 +27,6 @@ public class Pickable : MonoBehaviour, IPointerClickHandler
         transform.SetParent(pivot, false);
         
         _isPicked = false;
-        _eventBus.ItemDropped.RaiseEvent(GetComponent<ISlot>());
+        _eventBus.ItemDropped.RaiseEvent(GetComponent<SlotItem>());
     }
 }

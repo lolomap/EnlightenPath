@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
-
-namespace Items.Data
+namespace Spawnables.Data
 {
     [CreateAssetMenu(fileName = "Key", menuName = "Game/Item/Key", order = 0)]
     public class KeySO : SpawnObjectSO

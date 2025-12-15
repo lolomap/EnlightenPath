@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-
-namespace Items.Data
+namespace Spawnables.Data
 {
 	public enum SpawnLocation
 	{
@@ -20,7 +18,17 @@ namespace Items.Data
 		Count
 	}
 	
-	[CreateAssetMenu(fileName = "Item", menuName = "Game/Item/Item")]
+	public interface ISpawnObject
+	{
+		public void OnSpawn(SpawnObjectSO data);
+	}
+
+	public interface IMonsterTrigger : ISpawnObject
+	{
+		public void UpdateTrigger();
+	}
+	
+	[CreateAssetMenu(fileName = "Spawnable", menuName = "Game/Spawnable")]
 	public class SpawnObjectSO : ScriptableObject
 	{
 		public GameObject Prefab;
@@ -38,10 +46,5 @@ namespace Items.Data
 				PossibleLocations.Add(SpawnLocation.UpRightCorner);
 			}
 		}
-	}
-
-	public interface ISpawnObject
-	{
-		public void OnSpawn(SpawnObjectSO data) {}
 	}
 }

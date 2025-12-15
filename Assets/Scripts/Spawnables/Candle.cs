@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Events;
-using Items.Data;
+using Spawnables.Data;
 using UnityEngine;
 using Zenject;
-
-namespace Items
+namespace Spawnables
 {
     [RequireComponent(typeof(LightSource))]
-    public class Candle : MonoBehaviour, ISpawnObject, IHandSlot
+    public class Candle : HandSlotItem, ISpawnObject
     {
         public List<GameObject> Flame;
         public CandleSO Data;
@@ -37,11 +35,12 @@ namespace Items
         private void Start()
         {
             Toggle(Data.IsFlaming);
+            _lightSource.Tick();
         }
 
         public void OnSpawn(SpawnObjectSO data) => Data = data as CandleSO;
 
-        private void Toggle(bool isFlaming)
+        public void Toggle(bool isFlaming)
         {
             Data.IsFlaming = isFlaming;
             _lightSource.enabled = isFlaming;
@@ -51,21 +50,21 @@ namespace Items
             }
         }
 
-        private void OnPicked(ISlot item)
+        private void OnPicked(SlotItem item)
         {
             if (!ReferenceEquals(item, this)) return;
             
-            List<ISlot> candles = _inventory.GetItems<Candle>();
+            List<Candle> candles = _inventory.GetItems<Candle>();
             if (Data.IsFlaming)
             {
-                foreach (ISlot candle in candles)
+                foreach (Candle candle in candles)
                 {
-                    ((Candle)candle).Toggle(true);
+                    candle.Toggle(true);
                 }
             }
             else
             {
-                if (candles.Any(candle => ((Candle)candle).Data.IsFlaming))
+                if (candles.Any(candle => candle.Data.IsFlaming))
                     Toggle(true);
             }
         }

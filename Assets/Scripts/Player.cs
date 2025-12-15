@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
 	[Inject] private MapManager _mapManager;
 	[Inject] private LightManager _lightManager;
 	[Inject] private GrandCandle _grandCandle;
+	[Inject] private TurnSequenceManager _turnSequenceManager;
 	
 	private void Awake()
 	{
@@ -121,7 +122,8 @@ public class Player : MonoBehaviour
 			_isMoving = false;
 			_currentGridPos = _mapManager.WorldToGrid(transform.position);
 			_mapManager.ConnectingSourceGridPos = _currentGridPos;
-			_lightManager.UpdateAllSources();
+			
+			_turnSequenceManager.Turn();
 			
 			return;
 		}
