@@ -4,6 +4,7 @@ using AYellowpaper.SerializedCollections;
 using Data;
 using UI;
 using UnityEngine;
+using Utilities;
 using Zenject;
 using Random = UnityEngine.Random;
 
@@ -40,6 +41,7 @@ public class GrandCandle : MonoBehaviour
 				_rooms.Add(Instantiate(room));
 			}
 		}
+		_rooms.Shuffle();
 		
 		_ui = GetComponent<GrandCandleVisual>();
 		_ui.MaxElements = _rooms.Count;

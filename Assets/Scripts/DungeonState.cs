@@ -47,6 +47,6 @@ public class DungeonState : IInitializable, IDisposable
     {
         _unlocked.Add(color);
         if (_unlocked.Count >= _config.LockTypesToOpen)
-            _grandCandle.Push(_config.TileToUnlock, GrandCandle.Origin.Random);
+            _grandCandle.Push(_config.TileToUnlock, GrandCandle.Origin.Top); //TODO: Random
     }
 }
