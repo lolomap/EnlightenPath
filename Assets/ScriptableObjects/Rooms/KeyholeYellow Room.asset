@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: KeyholeYellow Room
   m_EditorClassIdentifier: Assembly-CSharp::RoomSO
   Prefab: {fileID: -3859386528984610834, guid: 3b662e3664ec8fa41a6e1b300169195b, type: 3}
-  Preview: {fileID: 21300000, guid: 3cdefc79657860e4faab611dac76ccdf, type: 3}
+  Preview: {fileID: 21300000, guid: e9cee89037595da4abd1cb030aa0f80b, type: 3}
   Connections: 00000000010000000200000003000000
   Direction: 0
+  IsPit: 0
   SpawnedInside:
   - {fileID: 11400000, guid: 406165afa42954049b7fa9b330d4339a, type: 2}

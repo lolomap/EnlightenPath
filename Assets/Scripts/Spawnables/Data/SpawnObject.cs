@@ -21,6 +21,7 @@ namespace Spawnables.Data
 	public interface ISpawnObject
 	{
 		public void OnSpawn(SpawnObjectSO data);
+		public void OnDestroy();
 	}
 
 	public interface IMonsterTrigger : ISpawnObject

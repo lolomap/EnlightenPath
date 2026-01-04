@@ -10,7 +10,8 @@ namespace Spawnables
         public MeshRenderer Mesh;
         public float OpenDuration;
         public KeyholeSO Data;
-
+        public bool IsUsed;
+        
         [Inject] private EventBus _eventBus;
         [Inject] private MapManager _mapManager;
 
@@ -29,6 +30,12 @@ namespace Spawnables
             Mesh.material = new(Mesh.material);
         }
 
+        public void OnDestroy()
+        {
+            if (IsUsed)
+                _eventBus.ItemLost.RaiseEvent(Data);
+        }
+
         private void Start()
         {
             Mesh.material.color = Data.Color;
@@ -40,7 +47,9 @@ namespace Spawnables
             Key key = item.GetComponent<Key>();
             if (key == null) return;
             if (key.Data.Color != Data.Color) return;
-            
+
+            key.IsUsed = true;
+            IsUsed = true;
             Destroy(key.gameObject);
             _eventBus.Unlocked.RaiseEvent(Data.Color);
             DOTween.Sequence()

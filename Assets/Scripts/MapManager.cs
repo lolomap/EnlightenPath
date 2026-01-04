@@ -214,8 +214,10 @@ public class MapManager : MonoBehaviour
 				_eventBus.LightSourceInstantiated.RaiseEvent(lightSource);
 			if (slotItem != null)
 				roomObject.Placed.Add(slotItem);
-			
-			obj.GetComponent<ISpawnObject>().OnSpawn(Instantiate(spawnable));
+
+			SpawnObjectSO objData = Instantiate(spawnable);
+			objData.name = spawnable.name;
+			obj.GetComponent<ISpawnObject>().OnSpawn(objData);
 		}
 	}
 	

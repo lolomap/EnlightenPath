@@ -618,7 +618,7 @@ GameObject:
   - component: {fileID: 209325927}
   - component: {fileID: 209325925}
   m_Layer: 0
-  m_Name: PreviewCamera
+  m_Name: Main Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -722,7 +722,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 7871
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1012,7 +1012,7 @@ GameObject:
   - component: {fileID: 330585547}
   - component: {fileID: 330585548}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: Base Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1065,7 +1065,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 3775
+    m_Bits: 768
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1086,7 +1086,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -30}
+  m_LocalPosition: {x: 0, y: 0, z: -100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1308,7 +1308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05c1723851864508bd4e90eb03a4c01a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DI.DungeonInstaller
-  DungeonConfig: {fileID: 11400000, guid: 66c89a8b044a64140b7252d9236cfb6c, type: 2}
+  DungeonConfig: {fileID: 11400000, guid: df5ceb669568c6c4dbf8d0df5eb39304, type: 2}
   MapManager: {fileID: 504605340}
   FogWar: {fileID: 837629392}
   LightManager: {fileID: 1373447806}
@@ -1548,7 +1548,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 611229177}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1606,7 +1606,7 @@ Transform:
   m_GameObject: {fileID: 611229177}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 9.93, z: 0}
+  m_LocalPosition: {x: 0, y: 6.5, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1850,7 +1850,7 @@ Transform:
   m_GameObject: {fileID: 837629390}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1873,7 +1873,7 @@ MonoBehaviour:
     sightRange: 20
     updateOnlyOnMove: 1
     lastSeenAt: {x: 0, y: 0}
-  levelMidPoint: {fileID: 611229181}
+  levelMidPoint: {fileID: 837629391}
   FogRefreshRate: 10
   fogPlaneHeight: 2
   fogPlaneMaterial: {fileID: 2100000, guid: 36b93ac6fcf129c449491654e397fe4a, type: 2}
@@ -2725,7 +2725,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 3719
+    m_Bits: 7815
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -2749,6 +2749,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47ff96f598265e54c9bc44f62fbb1849, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExtentCamera
+  BaseCamera: {fileID: 209325927}
   CameraOrientation: 0
   PlaneLayer:
     serializedVersion: 2
@@ -2811,7 +2812,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 3719
+    m_Bits: 7815
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -2879,6 +2880,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47ff96f598265e54c9bc44f62fbb1849, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExtentCamera
+  BaseCamera: {fileID: 209325927}
   CameraOrientation: 2
   PlaneLayer:
     serializedVersion: 2
@@ -3533,7 +3535,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 3719
+    m_Bits: 7815
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3557,6 +3559,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47ff96f598265e54c9bc44f62fbb1849, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExtentCamera
+  BaseCamera: {fileID: 209325927}
   CameraOrientation: 1
   PlaneLayer:
     serializedVersion: 2

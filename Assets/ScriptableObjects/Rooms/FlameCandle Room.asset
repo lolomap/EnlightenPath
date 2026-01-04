@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42e708d5e1ce4c119a96e6dd97b28f11, type: 3}
-  m_Name: KeyBlue Room
+  m_Name: FlameCandle Room
   m_EditorClassIdentifier: Assembly-CSharp::RoomSO
   Prefab: {fileID: -3859386528984610834, guid: 3b662e3664ec8fa41a6e1b300169195b, type: 3}
-  Preview: {fileID: 21300000, guid: 192f0c78befcb004aa1e8b049e84c1bf, type: 3}
+  Preview: {fileID: 21300000, guid: 3cdefc79657860e4faab611dac76ccdf, type: 3}
   Connections: 00000000010000000200000003000000
   Direction: 0
   IsPit: 0
   SpawnedInside:
-  - {fileID: 11400000, guid: 998b9315c7745a0488c7088a60e7ef90, type: 2}
+  - {fileID: 11400000, guid: 60db35ddcb003f24db15ccdcbc34059f, type: 2}

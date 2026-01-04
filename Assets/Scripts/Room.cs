@@ -9,6 +9,7 @@ using Zenject;
 
 public class Room : MonoBehaviour
 {
+    public LayerMask PitLayer;
     public LayerMask GroundLayer;
     public SerializedDictionary<SpawnLocation, Transform> SpawnPivots;
 
@@ -50,7 +51,12 @@ public class Room : MonoBehaviour
     {
         foreach (GameObject groundObj in GameObjectManipulator.FilterByLayer(gameObject, GroundLayer))
         {
-            groundObj.SetActive(false);
+            //groundObj.SetActive(false);
+            GameObjectManipulator.ToggleCollision(groundObj, false);
+        }
+        foreach (GameObject pitObj in GameObjectManipulator.FilterByLayer(gameObject, PitLayer))
+        {
+            pitObj.GetComponent<MeshRenderer>().enabled = true;
         }
     }
 

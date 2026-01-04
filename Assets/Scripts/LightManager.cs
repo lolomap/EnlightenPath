@@ -99,7 +99,7 @@ public class LightManager : MonoBehaviour
         {
             if (_lightedRooms.TryAdd(gridPos, 1))
             {
-                if (gridPos != context.PresentPos)
+                if (gridPos != context.PresentPos && _mapManager.GetRoomInPos(gridPos) == null)
                     WaitingForLightRooms.Add(gridPos);
             }
             else _lightedRooms[gridPos]++;
@@ -143,22 +143,13 @@ public class LightManager : MonoBehaviour
 
         callback(_mapManager.GridLoop(lightPos));
 
-        bool downBlocked = false, leftBlocked = false, upBlocked = false, rightBlocked = false;
         int maxIntensity = Math.Min(intensity + 1, Math.Min(_config.Width, _config.Height)); // Light ray cannot overlap self
         for (int i = 1; i < maxIntensity; i++)
         {
-            RoomSO downRoom = _mapManager.GetRoomInPos(lightPos + Vector2Int.down * (i - 1));
-            if (stopDirectionCondition(downRoom) || downRoom != null && !downRoom.Connections.Contains(Direction.Down))
-                downBlocked = true;
-            RoomSO leftRoom = _mapManager.GetRoomInPos(lightPos + Vector2Int.left * (i - 1));
-            if (stopDirectionCondition(leftRoom) || leftRoom != null && !leftRoom.Connections.Contains(Direction.Left))
-                leftBlocked = true;
-            RoomSO upRoom = _mapManager.GetRoomInPos(lightPos + Vector2Int.right * (i - 1));
-            if (stopDirectionCondition(upRoom) || upRoom != null && !upRoom.Connections.Contains(Direction.Right))
-                rightBlocked = true;
-            RoomSO rightRoom = _mapManager.GetRoomInPos(lightPos + Vector2Int.up * (i - 1));
-            if (stopDirectionCondition(rightRoom) || rightRoom != null && !rightRoom.Connections.Contains(Direction.Up))
-                upBlocked = true;
+            bool downBlocked = LightCastBlockStep(lightPos, Direction.Down, i, stopDirectionCondition);
+            bool leftBlocked = LightCastBlockStep(lightPos, Direction.Left, i, stopDirectionCondition);
+            bool upBlocked = LightCastBlockStep(lightPos, Direction.Up, i, stopDirectionCondition);
+            bool rightBlocked = LightCastBlockStep(lightPos, Direction.Right, i, stopDirectionCondition);
 			
             if (!downBlocked)
                 callback(_mapManager.GridLoop(lightPos + Vector2Int.down * i));
@@ -169,5 +160,19 @@ public class LightManager : MonoBehaviour
             if (!rightBlocked)
                 callback(_mapManager.GridLoop(lightPos + Vector2Int.right * i));
         }
+    }
+
+    private bool LightCastBlockStep(Vector2Int lightPos, Direction direction, int i, Func<RoomSO, bool> stopCondition)
+    {
+        RoomSO lastRoom = _mapManager.GetRoomInPos(lightPos + Connections.ToOffset(direction) * (i - 1));
+        RoomSO targetRoom = _mapManager.GetRoomInPos(lightPos + Connections.ToOffset(direction) * i);
+        if (stopCondition(lastRoom))
+            return true;
+
+        List<Direction> targetConnections = targetRoom != null
+            ? targetRoom.Connections
+            : new() { Direction.Down, Direction.Left, Direction.Right, Direction.Up };
+        
+        return lastRoom != null && !Connections.HasConnected(direction, targetConnections, lastRoom.Connections);
     }
 }

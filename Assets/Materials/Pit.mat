@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Surface
+  m_Name: Pit
   m_Shader: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -118,8 +118,8 @@ Material:
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.019607844, g: 0.05882353, b: 0.09803922, a: 1}
-    - _Color: {r: 0.019607844, g: 0.058823504, b: 0.09803919, a: 1}
+    - _BaseColor: {r: 0.57254905, g: 0.20784315, b: 0.121568635, a: 1}
+    - _Color: {r: 0.57254905, g: 0.20784312, b: 0.12156858, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []

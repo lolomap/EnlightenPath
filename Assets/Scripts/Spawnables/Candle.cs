@@ -31,6 +31,7 @@ namespace Spawnables
         {
             _lightSource = GetComponent<LightSource>();
         }
+        public void OnDestroy() => _eventBus.ItemLost.RaiseEvent(Data);
 
         private void Start()
         {

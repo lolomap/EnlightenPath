@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Spawnables.Data;
+using UnityEngine;
 
 namespace Events
 {
@@ -16,9 +17,11 @@ namespace Events
         public readonly GenericEventChannel MapIsReady = new();
         public readonly GenericEventChannel<SlotItem> ItemPicked = new();
         public readonly GenericEventChannel<SlotItem> ItemDropped = new();
+        //TODO: visualise lost items in ui
+        public readonly GenericEventChannel<SpawnObjectSO> ItemLost = new();
 
         public readonly GenericEventChannel<Color> Unlocked = new();
         public readonly GenericEventChannel Win = new();
-        public readonly GenericEventChannel Lose = new();
+        public readonly GenericEventChannel GameOver = new();
     }
 }

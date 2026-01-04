@@ -10,37 +10,51 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6eeb2b13a1b947909d314e7608ea4490, type: 3}
-  m_Name: TestDungeonConfig
+  m_Name: BaseDungeon
   m_EditorClassIdentifier: Assembly-CSharp::Data.DungeonConfig
   Width: 6
   Height: 6
-  LockTypesToOpen: 2
+  LockTypesToOpen: 3
   TileToUnlock: {fileID: 11400000, guid: c623e5f7bdf18274298c381f385b75a0, type: 2}
-  RequiredItems: []
+  RequiredItems:
+  - {fileID: 11400000, guid: 998b9315c7745a0488c7088a60e7ef90, type: 2}
+  - {fileID: 11400000, guid: 2c9e34d37ea7ca64b90d083a9a045a0f, type: 2}
+  - {fileID: 11400000, guid: 730b43b979b11e840b672af0cc55dfc6, type: 2}
+  - {fileID: 11400000, guid: 5ebe43c4f6bf54744a63df420de6ffd9, type: 2}
+  - {fileID: 11400000, guid: 5e2c48ad1c17ffd4792280fd0d6acaa8, type: 2}
+  - {fileID: 11400000, guid: 406165afa42954049b7fa9b330d4339a, type: 2}
   GrandCandle:
     StartRooms:
       _serializedList:
-      - Key: {fileID: 11400000, guid: 398b5cbb59f348749aefe85a762e1c2d, type: 2}
+      - Key: {fileID: 11400000, guid: 831651d4309c6c841ac0980932278d03, type: 2}
+        Value: 2
+      - Key: {fileID: 11400000, guid: 6b57ffdf38013294fa8b9ceb3d9d9c98, type: 2}
+        Value: 1
+      - Key: {fileID: 11400000, guid: 8c73a83bc739b2e4a96c1d00481f6a33, type: 2}
         Value: 1
     Rooms:
       _serializedList:
       - Key: {fileID: 11400000, guid: 831651d4309c6c841ac0980932278d03, type: 2}
-        Value: 5
+        Value: 25
       - Key: {fileID: 11400000, guid: 8c73a83bc739b2e4a96c1d00481f6a33, type: 2}
-        Value: 5
+        Value: 10
       - Key: {fileID: 11400000, guid: 6b57ffdf38013294fa8b9ceb3d9d9c98, type: 2}
-        Value: 5
+        Value: 12
       - Key: {fileID: 11400000, guid: 21bcf785aad5ad646b6e12166ce5f056, type: 2}
-        Value: 4
+        Value: 8
       - Key: {fileID: 11400000, guid: bf092bcb96368314f9fb7a636ba0a05c, type: 2}
         Value: 3
       - Key: {fileID: 11400000, guid: 398b5cbb59f348749aefe85a762e1c2d, type: 2}
-        Value: 4
+        Value: 8
       - Key: {fileID: 11400000, guid: b0a4985cd6e2c4e4db2c96afe29e3c21, type: 2}
+        Value: 2
+      - Key: {fileID: 11400000, guid: 3efba766b7622774b817dc50444740eb, type: 2}
         Value: 2
       - Key: {fileID: 11400000, guid: 9860603b52445974da9cb2f75c5dd33a, type: 2}
         Value: 2
       - Key: {fileID: 11400000, guid: 46041d0cd23d2d744bba5f8bd5d9b63f, type: 2}
         Value: 2
       - Key: {fileID: 11400000, guid: bffb57040bc468d4ba8b4f90f66e7b4c, type: 2}
+        Value: 2
+      - Key: {fileID: 11400000, guid: ea0c465993ede7341b6de058e5a1af88, type: 2}
         Value: 2

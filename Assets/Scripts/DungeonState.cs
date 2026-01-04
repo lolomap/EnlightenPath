@@ -4,6 +4,7 @@ using Data;
 using Events;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Zenject;
 
 [UsedImplicitly]
@@ -19,16 +20,16 @@ public class DungeonState : IInitializable, IDisposable
     {
         _eventBus.Unlocked.EventRaised += OnUnlocked;
         _eventBus.Win.EventRaised += Win;
-        _eventBus.Lose.EventRaised += Lose;
-        _grandCandle.Underflow += Lose;
+        _eventBus.GameOver.EventRaised += GameOver;
+        _grandCandle.Underflow += GameOver;
     }
     
     public void Dispose()
     {
         _eventBus.Unlocked.EventRaised -= OnUnlocked;
         _eventBus.Win.EventRaised -= Win;
-        _eventBus.Lose.EventRaised -= Lose;
-        _grandCandle.Underflow -= Lose;
+        _eventBus.GameOver.EventRaised -= GameOver;
+        _grandCandle.Underflow -= GameOver;
     }
 
     private void Win()
@@ -37,10 +38,10 @@ public class DungeonState : IInitializable, IDisposable
         Time.timeScale = 0;
     }
     
-    private void Lose()
+    private void GameOver()
     {
         Debug.LogWarning("LOSE!");
-        Time.timeScale = 0;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     private void OnUnlocked(Color color)

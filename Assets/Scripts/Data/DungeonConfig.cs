@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using Spawnables.Data;
 using UnityEngine;
 
 namespace Data
@@ -12,6 +13,7 @@ namespace Data
 		public int LockTypesToOpen;
 		public RoomSO TileToUnlock;
 
+		public List<SpawnObjectSO> RequiredItems = new();
 		public GrandCandleConfig GrandCandle;
 	}
 }

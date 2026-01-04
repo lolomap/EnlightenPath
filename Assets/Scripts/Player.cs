@@ -41,12 +41,12 @@ public class Player : MonoBehaviour
 
 	private void OnEnable()
 	{
-		_eventBus.ForceMove.EventRaised += MoveToGridPos;
+		_eventBus.ForceMove.EventRaised += OnForceMove;
 	}
 
 	private void OnDisable()
 	{
-		_eventBus.ForceMove.EventRaised -= MoveToGridPos;
+		_eventBus.ForceMove.EventRaised -= OnForceMove;
 	}
 
 	private void Update()
@@ -98,6 +98,13 @@ public class Player : MonoBehaviour
 		MoveToDark(randPos, true);
 	}
 
+	private void OnForceMove(Vector2Int gridPos)
+	{
+		if (_mapManager.GetRoomInPos(gridPos) == null)
+			MoveToDark(gridPos);
+		else MoveToGridPos(gridPos);
+	}
+
 	private void MoveToDark(Vector2Int gridPos, bool teleport = false)
 	{
 		RoomSO nextRoom = _grandCandle.Pick(1, true)[0];
@@ -110,7 +117,6 @@ public class Player : MonoBehaviour
 		
 		_mapManager.PlaceRoom(nextRoom, gridPos);
 		
-		//_eventBus.ForceMove.RaiseEvent(gridPos);
 		MoveToGridPos(gridPos);
 		if (teleport)
 			TeleportToGridPos(gridPos);

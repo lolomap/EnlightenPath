@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using Zenject;
 
 public class ExtentCamera : MonoBehaviour
@@ -10,18 +12,24 @@ public class ExtentCamera : MonoBehaviour
         Corner
     }
 
+    public Camera BaseCamera;
     public Orientation CameraOrientation;
     public LayerMask PlaneLayer;
 
+    private Camera _camera;
     private Camera _mainCamera;
+    private UniversalAdditionalCameraData _mainCameraData;
     private Transform _pivot;
     private Vector3 _mapSize;
+    private Vector3 _lastOffset;
     
     [Inject] private MapManager _mapManager;
 
     private void Start()
     {
+        _camera = GetComponent<Camera>();
         _mainCamera = Camera.main;
+        _mainCameraData = _mainCamera.GetUniversalAdditionalCameraData();
         if (_mainCamera == null)
         {
             Debug.LogError("Main Camera missing!");
@@ -59,5 +67,16 @@ public class ExtentCamera : MonoBehaviour
         localOffset.z = transform.localPosition.z;
 
         transform.localPosition = localOffset;
+
+        if (offset == _lastOffset) return;
+        _lastOffset = offset;
+        
+        _mainCameraData.cameraStack.Remove(_camera);
+        int baseIndex = _mainCameraData.cameraStack.FindIndex(x => x == BaseCamera);
+        int targetIndex = baseIndex;
+        if (offset.x < 0) targetIndex--; else targetIndex++;
+        if (offset.z < 0) targetIndex--; else targetIndex++;
+        targetIndex = Math.Clamp(targetIndex, 0, _mainCameraData.cameraStack.Count);
+        _mainCameraData.cameraStack.Insert(targetIndex, _camera);
     }
 }

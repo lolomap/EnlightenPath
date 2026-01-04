@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: KeyRed Room
   m_EditorClassIdentifier: Assembly-CSharp::RoomSO
   Prefab: {fileID: -3859386528984610834, guid: 3b662e3664ec8fa41a6e1b300169195b, type: 3}
-  Preview: {fileID: 21300000, guid: 3cdefc79657860e4faab611dac76ccdf, type: 3}
+  Preview: {fileID: 21300000, guid: 192f0c78befcb004aa1e8b049e84c1bf, type: 3}
   Connections: 00000000010000000200000003000000
   Direction: 0
+  IsPit: 0
   SpawnedInside:
   - {fileID: 11400000, guid: 2c9e34d37ea7ca64b90d083a9a045a0f, type: 2}

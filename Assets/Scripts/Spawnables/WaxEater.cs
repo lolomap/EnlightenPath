@@ -7,12 +7,14 @@ using UnityEngine;
 using Zenject;
 namespace Spawnables
 {
+    [RequireComponent(typeof(LightSource))]
     public class WaxEater : MonoBehaviour, IMonsterTrigger
     {
         public WaxEaterSO Data;
         
         private Vector2Int _gridPos;
         private Vector2Int _lastTriggeredPos = new(-1, -1);
+        private LightSource _lightSource;
 
         [Inject] private MapManager _mapManager;
         [Inject] private LightManager _lightManager;
@@ -21,6 +23,8 @@ namespace Spawnables
 
         private void Awake()
         {
+            _lightSource = GetComponent<LightSource>();
+            
             _gridPos = _mapManager.WorldToGrid(transform.position);
             
             if (Math.Abs(_mapManager.ConnectingSourceGridPos.x - _gridPos.x) <= 1 ||
@@ -30,7 +34,7 @@ namespace Spawnables
             //_mapManager.GetRoomInPos(_gridPos).Connections.Clear();
         }
 
-        private void OnDestroy()
+        public void OnDestroy()
         {
             _mapManager.Monsters.Remove(this);
             transform.DOKill();
@@ -81,6 +85,11 @@ namespace Spawnables
             foreach (Candle candle in toExtinguish)
             {
                 candle.Toggle(false);
+            }
+
+            if (targetPos == _gridPos)
+            {
+                _lightSource.enabled = false;
             }
         }
 
