@@ -1868,11 +1868,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5de54c084f472845b61ee9a97cb8a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FischlWorks_FogWar.csFogWar
-  fogRevealers:
-  - revealerTransform: {fileID: 192308855}
-    sightRange: 20
-    updateOnlyOnMove: 1
-    lastSeenAt: {x: 0, y: 0}
+  fogRevealers: []
   levelMidPoint: {fileID: 837629391}
   FogRefreshRate: 10
   fogPlaneHeight: 2

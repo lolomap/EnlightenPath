@@ -10,6 +10,7 @@ namespace Events
     public class EventBus : ScriptableObject
     {
         public readonly GenericEventChannel<LightSource> LightSourceInstantiated = new(nameof(LightSourceInstantiated));
+        public readonly GenericEventChannel<(LightSource, bool)> LightSourceToggled = new(nameof(LightSourceToggled));
         
         public readonly GenericEventChannel<bool> ToggleMovementUI = new(nameof(ToggleMovementUI));
         public readonly GenericEventChannel<Vector2Int> ForceMove = new(nameof(ForceMove));
