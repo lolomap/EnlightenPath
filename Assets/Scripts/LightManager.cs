@@ -137,36 +137,63 @@ public class LightManager : MonoBehaviour
             _eventBus.ToggleMovementUI.RaiseEvent(true);
     }
     
-    public void LightCast(Vector2Int lightPos, int intensity, Action<Vector2Int> callback, Func<RoomSO, bool> stopDirectionCondition = null)
+    /// <summary>
+    /// Call logic for every tile that can be lighted from specified position with specified intensity 
+    /// </summary>
+    /// <param name="lightPos">Source grid position</param>
+    /// <param name="intensity">Number of tiles lighted in front of source in one direction</param>
+    /// <param name="callback">Action to call for lighted grid position</param>
+    /// <param name="stopDirectionCondition">Additional condition of light blocking: (last iteration room, current room) => stops iteration</param>
+    public void LightCast(Vector2Int lightPos, int intensity, Action<Vector2Int> callback, Func<RoomSO, RoomSO, bool> stopDirectionCondition = null)
     {
-        stopDirectionCondition ??= _ => false;
+        stopDirectionCondition ??= (_, _) => false;
 
         callback(_mapManager.GridLoop(lightPos));
 
-        int maxIntensity = Math.Min(intensity + 1, Math.Min(_config.Width, _config.Height)); // Light ray cannot overlap self
-        for (int i = 1; i < maxIntensity; i++)
+        int maxHIntensity = Math.Min(intensity + 1, _config.Width); // Light ray cannot overlap self
+        int maxVIntensity = Math.Min(intensity + 1, _config.Height); // Light ray cannot overlap self
+        bool horizontalMax = false, verticalMax = false;
+        bool downBlocked = false, leftBlocked = false, upBlocked = false, rightBlocked = false;
+        for (int i = 1; !horizontalMax || !verticalMax; i++)
         {
-            bool downBlocked = LightCastBlockStep(lightPos, Direction.Down, i, stopDirectionCondition);
-            bool leftBlocked = LightCastBlockStep(lightPos, Direction.Left, i, stopDirectionCondition);
-            bool upBlocked = LightCastBlockStep(lightPos, Direction.Up, i, stopDirectionCondition);
-            bool rightBlocked = LightCastBlockStep(lightPos, Direction.Right, i, stopDirectionCondition);
+            horizontalMax = i >= maxHIntensity;
+            verticalMax = i >= maxVIntensity;
+            
+            if (!horizontalMax)
+            {
+                leftBlocked = leftBlocked || LightCastBlockStep(lightPos, Direction.Left, i, stopDirectionCondition);
+                rightBlocked = rightBlocked || LightCastBlockStep(lightPos, Direction.Right, i, stopDirectionCondition);
+            }
+            if (!verticalMax)
+            {
+                downBlocked = downBlocked || LightCastBlockStep(lightPos, Direction.Down, i, stopDirectionCondition);
+                upBlocked = upBlocked || LightCastBlockStep(lightPos, Direction.Up, i, stopDirectionCondition);
+            }
 			
-            if (!downBlocked)
+            if (!verticalMax && !downBlocked)
                 callback(_mapManager.GridLoop(lightPos + Vector2Int.down * i));
-            if (!leftBlocked)
+            if (!horizontalMax && !leftBlocked)
                 callback(_mapManager.GridLoop(lightPos + Vector2Int.left * i));
-            if (!upBlocked)
+            if (!verticalMax && !upBlocked)
                 callback(_mapManager.GridLoop(lightPos + Vector2Int.up * i));
-            if (!rightBlocked)
+            if (!horizontalMax && !rightBlocked)
                 callback(_mapManager.GridLoop(lightPos + Vector2Int.right * i));
         }
     }
 
-    private bool LightCastBlockStep(Vector2Int lightPos, Direction direction, int i, Func<RoomSO, bool> stopCondition)
+    /// <summary>
+    /// Calculate one step of light casting
+    /// </summary>
+    /// <param name="lightPos">Source grid position</param>
+    /// <param name="direction">Direction or light ray</param>
+    /// <param name="i">Iteration</param>
+    /// <param name="stopCondition">Additional condition of light blocking: (last iteration room, current room) => stops iteration</param>
+    /// <returns>Does current iteration block ray and is not lighted </returns>
+    private bool LightCastBlockStep(Vector2Int lightPos, Direction direction, int i, Func<RoomSO, RoomSO, bool> stopCondition)
     {
         RoomSO lastRoom = _mapManager.GetRoomInPos(lightPos + Connections.ToOffset(direction) * (i - 1));
         RoomSO targetRoom = _mapManager.GetRoomInPos(lightPos + Connections.ToOffset(direction) * i);
-        if (stopCondition(lastRoom))
+        if (stopCondition(lastRoom, targetRoom))
             return true;
 
         List<Direction> targetConnections = targetRoom != null

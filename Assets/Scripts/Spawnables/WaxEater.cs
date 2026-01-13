@@ -58,7 +58,7 @@ namespace Spawnables
                     if (_lastTriggeredPos != targetPos)
                         triggered = true;
                 },
-                visibleRoom => visibleRoom == null);
+                (_, visibleRoom) => visibleRoom == null);
             if (!triggered)
             {
                 if (_lastTriggeredPos is not { x: -1, y: -1 })
