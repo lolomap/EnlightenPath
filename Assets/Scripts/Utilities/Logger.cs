@@ -20,6 +20,7 @@ namespace Utilities
 
             Events = LogManager.GetLogger("events");
             Systems = LogManager.GetLogger("systems");
+            Events.Trace($"{Application.productName} {Application.version}");
             
             _eventBus.SubscribeAll(LogEvent);
         }
