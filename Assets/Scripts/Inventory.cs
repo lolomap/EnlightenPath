@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Events;
-using Spawnables.Data;
 using UnityEngine;
 using Zenject;
 
@@ -30,13 +29,13 @@ public class Inventory : MonoBehaviour
 
     private void OnEnable()
     {
-        _eventBus.ItemPicked.EventRaised += Onitem;
+        _eventBus.ItemPicked.EventRaised += OnPicked;
         _eventBus.ItemDropped.EventRaised += OnDropped;
     }
 
     private void OnDisable()
     {
-        _eventBus.ItemPicked.EventRaised -= Onitem;
+        _eventBus.ItemPicked.EventRaised -= OnPicked;
         _eventBus.ItemDropped.EventRaised -= OnDropped;
     }
 
@@ -53,7 +52,7 @@ public class Inventory : MonoBehaviour
             .Where(lightSource => lightSource != null);
     }
     
-    private void Onitem(SlotItem item)
+    private void OnPicked(SlotItem item)
     {
         switch (item)
         {
