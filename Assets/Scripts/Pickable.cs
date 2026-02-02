@@ -13,6 +13,11 @@ public class Pickable : MonoBehaviour, IPointerClickHandler
     
     public void OnPointerClick(PointerEventData eventData)
     {
+        Pick();
+    }
+
+    public void Pick()
+    {
         if (_isPicked) { Drop(); return; }
         if (_mapManager.ConnectingSourceGridPos != _mapManager.WorldToGrid(transform.position, true)) return;
 

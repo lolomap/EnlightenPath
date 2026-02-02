@@ -40,6 +40,7 @@ namespace Spawnables
         }
 
         public void OnSpawn(SpawnObjectSO data) => Data = data as CandleSO;
+        public SpawnObjectSO IData => Data;
 
         public void Toggle(bool isFlaming)
         {

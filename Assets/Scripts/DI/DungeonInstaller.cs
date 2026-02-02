@@ -1,6 +1,7 @@
 ﻿using Data;
 using FischlWorks_FogWar;
 using UI;
+using UnityEngine;
 using Zenject;
 
 namespace DI
@@ -17,6 +18,7 @@ namespace DI
 		public GrandCandle GrandCandle;
 		public Inventory Inventory;
 		public TurnSequenceManager TurnSequenceManager;
+		public WorldUIPivot WorldUIPivot;
 
 		public override void InstallBindings()
 		{
@@ -32,6 +34,8 @@ namespace DI
 			Container.Bind<Inventory>().FromInstance(Inventory).AsSingle();
 
 			Container.Bind<TurnSequenceManager>().FromScriptableObject(TurnSequenceManager).AsSingle();
+
+			Container.Bind<WorldUIPivot>().FromInstance(WorldUIPivot).AsSingle();
 		}
 	}
 }

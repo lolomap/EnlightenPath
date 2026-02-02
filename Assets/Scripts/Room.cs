@@ -3,6 +3,7 @@ using AYellowpaper.SerializedCollections;
 using Events;
 using FischlWorks_FogWar;
 using Spawnables.Data;
+using UI;
 using UnityEngine;
 using Utilities;
 using Zenject;
@@ -12,9 +13,11 @@ public class Room : MonoBehaviour
     public LayerMask PitLayer;
     public LayerMask GroundLayer;
     public SerializedDictionary<SpawnLocation, Transform> SpawnPivots;
-
-    public readonly List<SlotItem> Placed = new();
     
+    public RoomItems RoomItemsUI { get; private set; }
+    
+    public readonly List<SlotItem> Placed = new();
+
     private Vector2Int _gridPos;
 
     [Inject] private EventBus _eventBus;
@@ -37,6 +40,8 @@ public class Room : MonoBehaviour
 
     private void Awake()
     {
+        RoomItemsUI = GetComponentInChildren<RoomItems>();
+        
         if (_mapManager != null)
             _gridPos = _mapManager.WorldToGrid(transform.position);
     }
@@ -49,12 +54,12 @@ public class Room : MonoBehaviour
 
     public void BreakGround()
     {
-        foreach (GameObject groundObj in GameObjectManipulator.FilterByLayer(gameObject, GroundLayer))
+        foreach (GameObject groundObj in gameObject.FilterByLayer(GroundLayer))
         {
             //groundObj.SetActive(false);
-            GameObjectManipulator.ToggleCollision(groundObj, false);
+            groundObj.ToggleCollision(false);
         }
-        foreach (GameObject pitObj in GameObjectManipulator.FilterByLayer(gameObject, PitLayer))
+        foreach (GameObject pitObj in gameObject.FilterByLayer(PitLayer))
         {
             pitObj.GetComponent<MeshRenderer>().enabled = true;
         }
@@ -66,6 +71,7 @@ public class Room : MonoBehaviour
         if (pickedPos != _gridPos) return;
 
         Placed.Remove(item);
+        RoomItemsUI.RemoveItem(item.gameObject);
     }
 
     private void OnDropped(SlotItem item)
@@ -74,5 +80,8 @@ public class Room : MonoBehaviour
         if (pickedPos != _gridPos) return;
         
         Placed.Add(item);
+        
+        if (item is not ISpawnObject spawnObject) return;
+        RoomItemsUI.AddItem(item.gameObject, spawnObject.IData);
     }
 }

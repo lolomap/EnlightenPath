@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Candle
   m_EditorClassIdentifier: Assembly-CSharp::Items.Data.CandleSO
   Prefab: {fileID: 6887863591928836827, guid: 560e7f9614460fe43a298eb4516ee268, type: 3}
+  Preview: {fileID: 21300000, guid: 9145ec4cf07a08b4f9cd7ea6a49f70d5, type: 3}
   SpawnChance: 1
   PossibleLocations: 010000000700000008000000
   IsFlaming: 0

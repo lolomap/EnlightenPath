@@ -20,6 +20,7 @@ namespace Spawnables.Data
 	
 	public interface ISpawnObject
 	{
+		public SpawnObjectSO IData { get; }
 		public void OnSpawn(SpawnObjectSO data);
 		public void OnDestroy();
 	}
@@ -33,6 +34,7 @@ namespace Spawnables.Data
 	public class SpawnObjectSO : ScriptableObject
 	{
 		public GameObject Prefab;
+		public Sprite Preview;
 		public float SpawnChance;
 		public List<SpawnLocation> PossibleLocations = new() { SpawnLocation.UpRightCorner };
 

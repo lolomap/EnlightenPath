@@ -1,4 +1,5 @@
-﻿using Events;
+﻿using DI;
+using Events;
 using FischlWorks_FogWar;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -61,16 +62,16 @@ public class PreviewManager : MonoBehaviour
     private void SetBlocked(bool isBlocked)
     {
         _isBlocked = isBlocked;
-        GameObjectManipulator.SetTint(_previewObject, isBlocked ? PreviewBlockTint : PreviewTint);
+        _previewObject.SetTint(isBlocked ? PreviewBlockTint : PreviewTint);
     }
 
     private void SetupPreview(GameObject prefab, Quaternion rotation)
     {
-        _previewObject = Instantiate(prefab, Vector3.zero, rotation, transform);
+        _previewObject = DIGlobal.Instantiate(prefab, Vector3.zero, rotation, transform);
         
         _previewObject.layer = RenderLayer;
-        GameObjectManipulator.SetTint(_previewObject, PreviewTint);
-        GameObjectManipulator.ToggleCollision(_previewObject, false);
+        _previewObject.SetTint(PreviewTint);
+        _previewObject.ToggleCollision(false);
         UpdatePosition();
     }
 
@@ -107,10 +108,10 @@ public class PreviewManager : MonoBehaviour
         SetBlocked(!isValid);
 
         if (_cachedRoomObject != null)
-            GameObjectManipulator.ToggleCollision(_cachedRoomObject.gameObject, true);
+            _cachedRoomObject.gameObject.ToggleCollision(true);
         _cachedRoomObject = _mapManager.GetRoomObjectInPos(gridPosLooped);
         if (_cachedRoomObject != null)
-            GameObjectManipulator.ToggleCollision(_cachedRoomObject.gameObject, false);
+            _cachedRoomObject.gameObject.ToggleCollision(false);
         _fogWar.MarkObstaclesDirty();
     }
     

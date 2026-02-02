@@ -206,18 +206,19 @@ public class MapManager : MonoBehaviour
 			if (pivot == null) return;
 			
 			GameObject obj = DIGlobal.Instantiate(spawnable.Prefab, pivot);
-			//TODO: bool HasComponent(out component)
-			LightSource lightSource = obj.GetComponent<LightSource>();
-			SlotItem slotItem = obj.GetComponent<SlotItem>();
 			
-			if (lightSource != null)
+			if (obj.HasComponent(out LightSource lightSource))
 				_eventBus.LightSourceInstantiated.RaiseEvent(lightSource);
-			if (slotItem != null)
+			if (obj.HasComponent(out SlotItem slotItem))
 				roomObject.Placed.Add(slotItem);
 
 			SpawnObjectSO objData = Instantiate(spawnable);
 			objData.name = spawnable.name;
-			obj.GetComponent<ISpawnObject>().OnSpawn(objData);
+			if (obj.HasComponent(out ISpawnObject spawnObject))
+			{
+				spawnObject.OnSpawn(objData);
+				roomObject.RoomItemsUI.AddItem(obj, objData);
+			}
 		}
 	}
 	

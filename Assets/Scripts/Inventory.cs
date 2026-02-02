@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Events;
+using Spawnables.Data;
 using UnityEngine;
 using Zenject;
 

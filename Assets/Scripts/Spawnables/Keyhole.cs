@@ -62,5 +62,6 @@ namespace Spawnables
         }
 
         public void OnSpawn(SpawnObjectSO data) => Data = data as KeyholeSO;
+        public SpawnObjectSO IData => Data;
     }
 }

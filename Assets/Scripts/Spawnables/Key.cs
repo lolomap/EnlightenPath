@@ -29,5 +29,6 @@ namespace Spawnables
         }
 
         public void OnSpawn(SpawnObjectSO data) => Data = data as KeySO;
+        public SpawnObjectSO IData => Data;
     }
 }

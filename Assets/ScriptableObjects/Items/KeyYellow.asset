@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: KeyYellow
   m_EditorClassIdentifier: Assembly-CSharp::Items.Data.KeySO
   Prefab: {fileID: 6887863591928836827, guid: 0845066357040894aa099de805dca850, type: 3}
+  Preview: {fileID: 21300000, guid: 3e579a9be385f75428ca8ce5fc6dc084, type: 3}
   SpawnChance: 1
   PossibleLocations: 0100000000000000
   Color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

@@ -98,5 +98,6 @@ namespace Spawnables
             Data = (WaxEaterSO)data;
             _mapManager.Monsters.Add(this);
         }
+        public SpawnObjectSO IData => Data;
     }
 }

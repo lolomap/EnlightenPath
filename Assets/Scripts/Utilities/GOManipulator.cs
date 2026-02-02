@@ -2,9 +2,15 @@
 using UnityEngine;
 namespace Utilities
 {
-    public static class GameObjectManipulator
+    public static class GOManipulator
     {
-        public static void SetTint(GameObject target, Color color)
+        public static bool HasComponent<T>(this GameObject go, out T component)
+        {
+            component = go.GetComponent<T>();
+            return component != null;
+        }
+        
+        public static void SetTint(this GameObject target, Color color)
         {
             if (target == null) return;
             
@@ -18,7 +24,7 @@ namespace Utilities
             }
         }
         
-        public static void ToggleCollision(GameObject target, bool enabled)
+        public static void ToggleCollision(this GameObject target, bool enabled)
         {
             if (target == null) return;
             
@@ -29,7 +35,7 @@ namespace Utilities
             }
         }
 
-        public static List<GameObject> FilterByLayer(GameObject target, LayerMask layer)
+        public static List<GameObject> FilterByLayer(this GameObject target, LayerMask layer)
         {
             List<GameObject> result = new();
 
